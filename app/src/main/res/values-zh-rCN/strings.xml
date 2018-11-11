@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DID钱包</string>
+    <string name="nav_home">首页</string>
+    <string name="nav_charges">收钱</string>
+    <string name="nav_pay">付钱</string>
+    <string name="nav_mine">我</string>
+</resources>

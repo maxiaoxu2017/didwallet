@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DidWallet</string>
+    <string name="nav_home">home</string>
+    <string name="nav_charges">charges</string>
+    <string name="nav_pay">pay</string>
+    <string name="nav_mine">mine</string>
+</resources>
