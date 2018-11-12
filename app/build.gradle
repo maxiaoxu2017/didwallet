@@ -32,7 +32,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support:design:26.1.0'
     compile (name: 'Elastos.ORG.Wallet.Lib', ext: 'aar')
-    compile (name: 'nanohttpd-2.2.0', ext: 'jar')
+//    compile (name: 'nanohttpd-2.2.0', ext: 'jar')
 
 
     configurations.all {
