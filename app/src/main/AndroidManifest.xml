@@ -23,14 +23,17 @@
             <!--</intent-filter>-->
         </activity>
 
-        <activity android:name=".activity.DidLaunchActivity">
+        <activity
+            android:process=":didservice"
+            android:name=".activity.DidLaunchActivity">
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.MAIN" />-->
                 <!--<category android:name="android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
 
-        <service android:name=".service.DidService"/>
+        <service android:name=".service.DidService"
+            android:process=":didservice"/>
 
         <meta-data
             android:name="android.max_aspect"

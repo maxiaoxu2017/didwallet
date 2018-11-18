@@ -11,7 +11,6 @@ import java.util.Map;
 import fi.iki.elonen.NanoHTTPD;
 
 public class HttpServer extends NanoHTTPD {
-    /*这类就是要自定义一些返回值，我在这里定义了700。都属于自定义*/
     public enum Status implements NanoHTTPD.Response.IStatus {
         SWITCH_PROTOCOL(101, "Switching Protocols"),
         NOT_USE_POST(700, "not use post");
@@ -41,7 +40,7 @@ public class HttpServer extends NanoHTTPD {
 
     @Override
     public Response serve(IHTTPSession session) {
-        LogUtil.w("httpd serve");
+        LogUtil.w("httpd serve:");
         if (Method.POST.equals(session.getMethod())) {
             Map<String, String> files = new HashMap<String, String>();
             Map<String, String> header = session.getHeaders();

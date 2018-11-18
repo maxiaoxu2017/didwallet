@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         DidLibrary.openLog(true);
         String message = DidLibrary.init(this);
         LogUtil.d(message);
-        Toast.makeText(this, "init success:" + message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -47,9 +47,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
         switch (id) {
             case R.id.btn_back:
-                if (webView.canGoBack()) {
-                    webView.goBack();
-                }
+//                if (webView.canGoBack()) {
+//                    webView.goBack();
+//                }
+                Intent intent = new Intent();
+                intent.setClass(this, DemoActivity.class);
+                startActivity(intent);
                 break;
             case R.id.btn_game:
                 webView.loadUrl("file:///android_asset/demo.html");
