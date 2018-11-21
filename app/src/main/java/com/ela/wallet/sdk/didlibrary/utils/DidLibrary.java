@@ -19,6 +19,8 @@ import com.google.gson.JsonObject;
 import org.elastos.wallet.lib.ElastosWallet;
 import org.elastos.wallet.lib.ElastosWalletDID;
 import org.elastos.wallet.lib.ElastosWalletHD;
+import org.elastos.wallet.lib.ElastosWalletSign;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -42,9 +44,11 @@ public class DidLibrary {
         Intent intent = new Intent();
         intent.setClass(context, DidService.class);
         context.startService(intent);
-//        if (TextUtils.isEmpty(Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, ""))) {
+        if (TextUtils.isEmpty(Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, ""))) {
             GenrateMnemonic();
-//        }
+        }
+//        LogUtil.d("did=" + Did());
+
         return "init success";
     }
 
@@ -72,8 +76,10 @@ public class DidLibrary {
         }
         message += "mnemonic: " + mnemonic + "\n";
 
+//        mnemonic = "搅 退 未 晚 亮 盖 做 织 航 尘 阶 票";
+//        language = "chinese";
         mSeed = new ElastosWallet.Data();
-        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "0");
+        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "admin123");
         if (ret <= 0) {
             String errmsg = "Failed to get seed from mnemonic. ret=" + ret + "\n";
             LogUtil.e(errmsg);
@@ -93,6 +99,8 @@ public class DidLibrary {
         }
         mPrivateKey = privateKey;
         message += "privateKey: " + privateKey + "\n";
+        Utilty.setPreference(mContext, Constants.SP_KEY_DID_PRIVATEKEY, privateKey);
+        LogUtil.d("privatekey=" + privateKey);
 
         String publicKey = ElastosWallet.getSinglePublicKey(mSeed, mSeedLen);
         if (publicKey == null) {
@@ -164,7 +172,7 @@ public class DidLibrary {
         return message;
     }
 
-    private String Did() {
+    private static String Did() {
         String message = "";
 
         ElastosWallet.Data idChainMasterPublicKey = ElastosWalletDID.getIdChainMasterPublicKey(mSeed, mSeedLen);
@@ -199,26 +207,27 @@ public class DidLibrary {
     public static void testChongzhi() {
         String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
         String toAddress = Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, "");
-        String param = String.format("  {\"inputs\":[\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":10}]}", toAddress);
-
+        String param = String.format("  {\"inputs\":[\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":100000000}]}", toAddress);
+        LogUtil.d("chongzhi param=" + param);
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_CCT, param, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
+                LogUtil.d("chongzhi response=" + response);
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = getSignedData(response);
-                        LogUtil.d("signed data=" + signed);
+                        String signed = testSignTxData();
+                        LogUtil.d("chongzhi signed data=" + signed);
                         String signdparam = String.format("{\"data\":\"%s\"}", signed);
-                        LogUtil.d("signdparam data=" + signdparam);
+                        LogUtil.d("chongzhi srt data=" + signdparam);
                         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                             @Override
                             public void onFinish(final String response) {
                                 ((Activity)mContext).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        LogUtil.d("chongzhi result:" + response);
+                                        LogUtil.d("chongzhi srt result:" + response);
                                         Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -231,7 +240,6 @@ public class DidLibrary {
                         });
                     }
                 });
-                LogUtil.d("response=" + response);
             }
 
             @Override
@@ -370,7 +378,7 @@ public class DidLibrary {
                     @Override
                     public void run() {
                         Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = getSignedData(response);
+                        String signed = "";//testCosignTxData();
                         LogUtil.d("signed data=" + signed);
                         String signdparam = String.format("{\"data\":\"%s\"}", signed);
                         LogUtil.d("signdparam data=" + signdparam);
@@ -408,11 +416,49 @@ public class DidLibrary {
         data.buf = origin.getBytes();
         ElastosWallet.Data signedData = new ElastosWallet.Data();
         int signedLen = ElastosWallet.sign(mPrivateKey, data, data.buf.length, signedData);
+//        int signedLen = ElastosWalletSign.generateRawTransaction(origin);
         if (signedLen <= 0) {
             String errmsg = "Failed to sign data.\n";
             LogUtil.e(errmsg);
         }
+        testSignTxData();
         return Utilty.bytesToHexString(signedData.buf);
+    }
+
+    private static String testSignTxData() {
+        String message = "";
+
+//        String transaction = "{\"Transactions\":[{\"UTXOInputs\":[{"
+//                + "\"txid\":\"f176d04e5980828770acadcfc3e2d471885ab7358cd7d03f4f61a9cd0c593d54\","
+//                + "\"privateKey\":\"b6f010250b6430b2dd0650c42f243d5445f2044a9c2b6975150d8b0608c33bae\","
+//                + "\"index\":0,\"address\":\"EeniFrrhuFgQXRrQXsiM1V4Amdsk4vfkVc\"}],"
+//                + "\"Outputs\":[{\"address\":\"EbxU18T3M9ufnrkRY7NLt6sKyckDW4VAsA\","
+//                + "\"amount\":1000000}]}]}";
+//        String transaction = String.format("{\"Transactions\":[{\"UTXOInputs\":[{\"address\":\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\",\"txid\":\"583ca6c3780b3ba880b446c7ce5427e538a82fc185e54749e61805a97dc3b222\",\"index\":0, \"privateKey\":\"%s\"}],\"CrossChainAsset\":[{\"amount\":10,\"address\":\"ELdKTfcrYCvGPh4iBNj1NWreRs3Rej7D4i\"}],\"Fee\":20000,\"Outputs\":[{\"amount\":10010,\"address\":\"XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ\"},{\"amount\":9999979990,\"address\":\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"}]}]}", mPrivateKey);
+        String transaction = String.format("{\"Transactions\":[{\"UTXOInputs\":[{\"address\":\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\",\"txid\":\"583ca6c3780b3ba880b446c7ce5427e538a82fc185e54749e61805a97dc3b222\",\"index\":0, \"privateKey\":\"%s\"}],\"CrossChainAsset\":[{\"amount\":100000000,\"address\":\"ENUFoHcsfvXkAVomXJLDrhM189k7qSy3xD\"}],\"Fee\":20000,\"Outputs\":[{\"amount\":100010000,\"address\":\"XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ\"},{\"amount\":9899980000,\"address\":\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"}]}]}", "840d6c631e3d612aa624dae2d7f6d354e58135a7a6cb16ed6dd264b7d104aae7");
+        LogUtil.d("origin data:" + transaction);
+        String signedData = ElastosWalletSign.generateRawTransaction(transaction);
+        if(signedData == null) {
+            String errmsg = "Failed to generate raw transaction.\n";
+            message += errmsg;
+
+            return message;
+        }
+        message += signedData + "\n";
+
+        message += "================================================\n";
+        return signedData;
+    }
+
+    private static String parseChongzhiData(String data) {
+        String returnData = "";
+        try {
+            JSONObject js = new JSONObject(data);
+//            String result
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return returnData;
     }
 
 }

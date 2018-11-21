@@ -4,4 +4,40 @@
     <string name="nav_charges">receive</string>
     <string name="nav_pay">send</string>
     <string name="nav_mine">me</string>
+
+    <string name="home_wallet">wallet</string>
+    <string name="home_balance">Walletbalance</string>
+    <string name="home_expense">expense</string>
+    <string name="home_income">income</string>
+
+    <string name="send_recipient">recipient</string>
+    <string name="send_enter_address">Please enter ELA address</string>
+    <string name="send_backup">Your wallet has not been backed up</string>
+    <string name="send_tips">Keep your wallet safe, you should back up you wallet information.Then you can make payment transactions</string>
+    <string name="send_enter_pwd">Enter Spending Password</string>
+    <string name="send_sending">Sending transaction, It may take some time, Please be patient</string>
+    <string name="send_creating">Creating transaction</string>
+    <string name="send_click">Click to send</string>
+
+    <string name="me_recharge">Recharge</string>
+    <string name="me_withdraw">withdraw</string>
+
+    <string name="word_issafe">Is your environment safe to use?</string>
+    <string name="word_besafe">Please make sure there is no security issue in the surrounding environment</string>
+    <string name="word_resume">Anyone who holds your resume phrase, he can access or use your money</string>
+    <string name="word_remember">Please remember this sentence carefully</string>
+    <string name="word_confirm">We will confirm next page</string>
+    <string name="word_written">I have written it down</string>
+    <string name="word_verify">Let\'s verify your backup phrase</string>
+    <string name="word_click">Please click each word in order</string>
+    <string name="word_iscorrect">Is this correct?</string>
+    <string name="word_cleanup">clean up</string>
+    <string name="word_backdup">Your wallet has been backed up</string>
+    <string name="word_tips">Please store your phrases in a safe place. If the program is deleted, no phrase will be able to recover the wallet.</string>
+    <string name="word_newpwd">Please enter a new payment password</string>
+    <string name="word_pwdtips">Payment password can not be resumed. Be sure to remember it well.(at least 8bits)</string>
+
+    <string name="import_wallet">Import the wallet</string>
+    <string name="input_phrase">Please input backup phrase.(Usually 12 words, spaces between words.)</string>
+    <string name="set_pwd">Set payment password</string>
 </resources>
