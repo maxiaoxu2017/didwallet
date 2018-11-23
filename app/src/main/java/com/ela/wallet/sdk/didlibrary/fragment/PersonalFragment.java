@@ -7,7 +7,7 @@ import android.view.View;
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseFragment;
 
-public class BlankFragment extends BaseFragment {
+public class PersonalFragment extends BaseFragment {
 
     @Override
     protected void initView(View rootView, @Nullable Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class BlankFragment extends BaseFragment {
 
     @Override
     protected int getRootViewId() {
-        return R.layout.activity_did_main;
+        return R.layout.fragment_personal;
     }
 
     @Override

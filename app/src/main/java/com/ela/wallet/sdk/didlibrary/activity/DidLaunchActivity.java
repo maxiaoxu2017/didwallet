@@ -11,6 +11,10 @@ import android.widget.TextView;
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseActivity;
 import com.ela.wallet.sdk.didlibrary.fragment.BlankFragment;
+import com.ela.wallet.sdk.didlibrary.fragment.ChargeFragment;
+import com.ela.wallet.sdk.didlibrary.fragment.HomeFragment;
+import com.ela.wallet.sdk.didlibrary.fragment.PayFragment;
+import com.ela.wallet.sdk.didlibrary.fragment.PersonalFragment;
 import com.ela.wallet.sdk.didlibrary.widget.CustomViewPager;
 import com.ela.wallet.sdk.didlibrary.widget.TitleFragmentPagerAdapter;
 
@@ -49,10 +53,10 @@ public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageC
     @Override
     protected void initData() {
         List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new BlankFragment());
-        fragments.add(new BlankFragment());
-        fragments.add(new BlankFragment());
-        fragments.add(new BlankFragment());
+        fragments.add(new HomeFragment());
+        fragments.add(new ChargeFragment());
+        fragments.add(new PayFragment());
+        fragments.add(new PersonalFragment());
         TitleFragmentPagerAdapter adapter = new TitleFragmentPagerAdapter(getSupportFragmentManager(), fragments, new String[]{getString(R.string.nav_home), getString(R.string.nav_charges), getString(R.string.nav_pay), getString(R.string.nav_mine)});
         mViewPager.setAdapter(adapter);
         mViewPager.addOnPageChangeListener(this);
