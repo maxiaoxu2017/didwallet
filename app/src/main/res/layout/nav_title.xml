@@ -42,8 +42,8 @@
         android:gravity="center"
         android:maxLines="1"
         android:maxWidth="300dp"
-        android:text="@string/app_name"
-        android:textColor="@color/textBlack"
+        android:text="@string/library_name"
+        android:textColor="@android:color/white"
         android:textSize="18sp" />
 
     <TextView

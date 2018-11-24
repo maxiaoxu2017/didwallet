@@ -36,11 +36,13 @@ public class HttpRequest {
 					URL strUrl = new URL(url);
 					connection = (HttpURLConnection) strUrl.openConnection();
 					connection.setRequestMethod("GET");
-					connection.setConnectTimeout(1000);
-					connection.setReadTimeout(1000);
-					connection.setDoInput(true);
-					connection.setDoOutput(true);
-					
+					connection.setConnectTimeout(60000);
+					connection.setReadTimeout(60000);
+					connection.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+					connection.setRequestProperty("accept","application/json");
+
+					int code = connection.getResponseCode();
+					LogUtil.i("http response code=" + code);
 					InputStream inputStream = connection.getInputStream();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 					StringBuilder response = new StringBuilder();

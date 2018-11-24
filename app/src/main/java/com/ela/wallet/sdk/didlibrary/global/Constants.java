@@ -6,4 +6,8 @@ public class Constants {
 
     public static final String SP_KEY_DID_PRIVATEKEY = "did_privatekey";
     public static final String SP_KEY_DID_ADDRESS = "did_address";
+
+    public static final int INTENT_REQUEST_CODE_SCAN = 1001;
+
+    public static final String INTENT_PARAM_KEY_SCANRESUTL = "scan_result";
 }

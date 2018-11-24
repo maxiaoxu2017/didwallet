@@ -21,7 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LogUtil.i(activityName + ":onCreate");
         super.onCreate(savedInstanceState);
-//        getSupportActionBar().hide();
+        getSupportActionBar().hide();
         setContentView(getRootViewId());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制竖屏
         initView();
@@ -74,6 +74,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy() {
         LogUtil.i(activityName + ":onDestroy");
         super.onDestroy();
+    }
+
+    public void onLeftNavClick(View view) {
+        finish();
     }
 
 }

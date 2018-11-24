@@ -1,14 +1,18 @@
 <resources>
-    <string name="app_name">DidWallet</string>
+    <string name="library_name">DidWallet</string>
     <string name="nav_home">home</string>
     <string name="nav_charges">receive</string>
     <string name="nav_pay">send</string>
     <string name="nav_mine">me</string>
 
     <string name="home_wallet">wallet</string>
+    <string name="home_wallet_name">Personal Wallet</string>
     <string name="home_balance">Walletbalance</string>
     <string name="home_expense">expense</string>
     <string name="home_income">income</string>
+
+    <string name="charge_copytips">(Click to copy address)</string>
+    <string name="charge_reset">Reset address</string>
 
     <string name="send_recipient">recipient</string>
     <string name="send_enter_address">Please enter ELA address</string>
@@ -21,6 +25,11 @@
 
     <string name="me_recharge">Recharge</string>
     <string name="me_withdraw">withdraw</string>
+    <string name="me_history">Recharge and withdraw record</string>
+    <string name="me_preference">preference</string>
+    <string name="me_preference_language">language</string>
+    <string name="me_preference_language_select_english">ENGLISH</string>
+    <string name="me_preference_language_select_chinese">中文</string>
 
     <string name="word_issafe">Is your environment safe to use?</string>
     <string name="word_besafe">Please make sure there is no security issue in the surrounding environment</string>
@@ -40,4 +49,7 @@
     <string name="import_wallet">Import the wallet</string>
     <string name="input_phrase">Please input backup phrase.(Usually 12 words, spaces between words.)</string>
     <string name="set_pwd">Set payment password</string>
+
+
+    <string name="scan_noresult">There\'s no result, Please retry!</string>
 </resources>

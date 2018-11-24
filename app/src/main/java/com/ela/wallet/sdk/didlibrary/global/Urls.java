@@ -4,16 +4,23 @@ public class Urls {
 
     private static String SERVER_DID_DEBUG = "http://18.179.20.67:8080";
     private static String SERVER_DID_RELEASE = "http://hw-did-api.elastos.org:8080";
+    private static String SERVER_DID_HISTORY_DEBUG = "http://54.64.220.165:8081";
+    private static String SERVER_DID_HISTORY_RELEASE = "";
     private static String SERVER_WALLET_DEBUG = "http://18.179.207.38:8080";
     private static String SERVER_WALLET_RELEASE = "";
+    private static String SERVER_WALLET_HISTORY_DEBUG = "http://54.64.220.165:8080";
+    private static String SERVER_WALLET_HISTORY_RELEASE = "";
 
     public static String SERVER_DID = SERVER_DID_RELEASE;
     public static String SERVER_WALLET = SERVER_WALLET_RELEASE;
+    public static String SERVER_DID_HISTORY = SERVER_DID_HISTORY_RELEASE;
+    public static String SERVER_WALLET_HISTORY = SERVER_WALLET_HISTORY_RELEASE;
 
     public static String DID_BALANCE = "/api/1/balance/";//{address};
     public static String DID_CTX = "/api/1/createTx";
     public static String DID_CCT = "/api/1/createCrossTx";
     public static String DID_SRT = "/api/1/sendRawTx";
+    public static String DID_HISTORY = "/api/1/history/";//{address};
 
     public static String ELA_BALANCE = "/api/1/balance/";
     public static String ELA_CTX = "/api/1/createTx";
@@ -22,11 +29,15 @@ public class Urls {
 
     static {
         if (Constants.isDebug) {
-            SERVER_DID = SERVER_DID_DEBUG;
-            SERVER_WALLET = SERVER_WALLET_DEBUG;
+            SERVER_DID              = SERVER_DID_DEBUG;
+            SERVER_WALLET           = SERVER_WALLET_DEBUG;
+            SERVER_DID_HISTORY      = SERVER_DID_HISTORY_DEBUG;
+            SERVER_WALLET_HISTORY   = SERVER_WALLET_HISTORY_DEBUG;
         } else {
-            SERVER_DID = SERVER_DID_RELEASE;
-            SERVER_WALLET = SERVER_WALLET_RELEASE;
+            SERVER_DID              = SERVER_DID_RELEASE;
+            SERVER_WALLET           = SERVER_WALLET_RELEASE;
+            SERVER_DID_HISTORY      = SERVER_DID_HISTORY_RELEASE;
+            SERVER_WALLET_HISTORY   = SERVER_WALLET_HISTORY_RELEASE;
         }
     }
 }

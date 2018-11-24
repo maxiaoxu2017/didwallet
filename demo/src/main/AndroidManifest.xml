@@ -24,7 +24,9 @@
             android:name="android.max_aspect"
             android:value="2.4" />
 
-        <activity android:name=".DemoActivity"></activity>
+        <activity
+            android:name=".DemoActivity"
+            android:label="@string/demo_name"></activity>
     </application>
 
 </manifest>
