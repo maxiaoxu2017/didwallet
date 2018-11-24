@@ -41,10 +41,11 @@ public class DidLibrary {
     public static String init(Context context) {
         LogUtil.d("init");
         mContext = context;
+        Utilty.setContext(context);
         Intent intent = new Intent();
         intent.setClass(context, DidService.class);
         context.startService(intent);
-        if (TextUtils.isEmpty(Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, ""))) {
+        if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""))) {
             GenrateMnemonic();
         }
 //        LogUtil.d("did=" + Did());
@@ -206,7 +207,7 @@ public class DidLibrary {
      */
     public static void testChongzhi() {
         String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
-        String toAddress = Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, "");
+        String toAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
         String param = String.format("  {\"inputs\":[\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":100000000}]}", toAddress);
         LogUtil.d("chongzhi param=" + param);
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_CCT, param, new HttpRequest.HttpCallbackListener() {
@@ -256,7 +257,7 @@ public class DidLibrary {
      */
     public static void testTixian() {
         String toAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
-        String fromAddress = Utilty.getPreference(mContext, Constants.SP_KEY_DID_ADDRESS, "");
+        String fromAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
         String param = String.format("  {\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":10}]}", fromAddress, toAddress);
 
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_CCT, param, new HttpRequest.HttpCallbackListener() {

@@ -60,11 +60,23 @@ public class HttpServer extends NanoHTTPD {
             String uri = session.getUri();
             LogUtil.w("uri=" + uri);
             String params = session.getQueryParameterString();
-            if (uri.startsWith("/did")) {
-                String address = Utilty.getPreference(null, Constants.SP_KEY_DID_ADDRESS, "");
+            if (uri.startsWith("/api/v1/getDid")) {
+                String address = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
                 return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"200\",\"result\":\"%s\"}", address));
-            } else if (uri.startsWith("/balance")) {
+            } else if (uri.startsWith("/api/v1/getAddress")) {
                 return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"200\",\"result\":\"%s\"}", 0));
+            } else if (uri.contains("/api/v1/getBalance")) {
+
+            } else if (uri.startsWith("/api/v1/sendTransfer")) {
+
+            } else if (uri.startsWith("/api/v1/getTxById")) {
+
+            } else if (uri.startsWith("/api/v1/getAllTxs")) {
+
+            } else if (uri.startsWith("/api/v1/setDidInfo")) {
+
+            } else if (uri.startsWith("/api/v1/getDidInfo")) {
+
             }
 
             return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"status\":\"200\"}");

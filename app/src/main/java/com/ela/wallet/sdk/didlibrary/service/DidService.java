@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.ela.wallet.sdk.didlibrary.http.HttpServer;
+import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 
 import java.io.IOException;
 
@@ -21,11 +22,12 @@ public class DidService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        Utilty.setServiceContext(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mHttpServer = new HttpServer(8080);
+        mHttpServer = new HttpServer(34561);
         try {
             mHttpServer.start();
         } catch (IOException e) {

@@ -5,13 +5,28 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.ela.wallet.sdk.didlibrary.global.Constants;
+
 public class Utilty {
 
     private static Context mContext;
+    private static Context sContext;
 
     private static final String SP_NAME = "didlibrary";
-
     private static SharedPreferences sp;
+
+    public static void setContext(Context context) {
+        mContext = context;
+        LogUtil.w("context=" + mContext);
+    }
+
+    public static void setServiceContext(Context context) {
+        sContext = context;
+    }
+
+    private static Context getContext() {
+        return sContext == null ? mContext : sContext;
+    }
 
     public static boolean setPreference(@NonNull Context context, String key, String value) {
         mContext = context;
@@ -25,9 +40,14 @@ public class Utilty {
     }
 
     @Nullable
-    public static String getPreference(@NonNull Context context, String key, String defValue) {
+    public static String getPreference(String key, String defValue) {
         if (sp == null) {
-            sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+            try {
+                LogUtil.w("context=" + mContext);
+                sp = getContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+            } catch (Exception e) {
+                LogUtil.e(e.getMessage());
+            }
         }
 
         return sp.getString(key, defValue);
@@ -73,7 +93,7 @@ public class Utilty {
 
     /**
      * 数组转换成十六进制字符串
-     * @param byte[]
+     * @param bArray
      * @return HexString
      */
     public static final String bytesToHexString(byte[] bArray) {
@@ -91,7 +111,7 @@ public class Utilty {
 
     /**
      * 数组转成十六进制字符串
-     * @param byte[]
+     * @param b
      * @return HexString
      */
     public static String toHexString1(byte[] b){
@@ -132,7 +152,7 @@ public class Utilty {
 
     /**
      * 十六进制字符串转换字符串
-     * @param HexString
+     * @param s
      * @return String
      */
     public static String toStringHex(String s) {
