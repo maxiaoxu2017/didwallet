@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.ela.wallet.sdk.didlibrary.activity.BackupTipsActivity;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 
 
@@ -78,6 +79,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     public void onLeftNavClick(View view) {
         finish();
+    }
+
+    public void onRightTextClick(View view) {
+        Intent intent = new Intent();
+        intent.setClass(this, BackupTipsActivity.class);
+        startActivity(intent);
     }
 
 }

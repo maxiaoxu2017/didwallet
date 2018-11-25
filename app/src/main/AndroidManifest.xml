@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -38,7 +38,7 @@
         </activity>
         <activity
             android:name=".activity.ScanActivity"
-            android:process=":didservice"/>
+            android:process=":didservice" />
 
         <service
             android:name=".service.DidService"
@@ -48,6 +48,9 @@
             android:name="android.max_aspect"
             android:value="2.4" />
 
+        <activity
+            android:name=".activity.BackupTipsActivity"
+            android:process=":didservice"></activity>
     </application>
 
 </manifest>
