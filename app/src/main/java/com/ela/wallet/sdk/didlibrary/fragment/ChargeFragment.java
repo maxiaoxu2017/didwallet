@@ -2,9 +2,11 @@ package com.ela.wallet.sdk.didlibrary.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseFragment;
@@ -14,6 +16,7 @@ import com.ela.wallet.sdk.didlibrary.global.Urls;
 import com.ela.wallet.sdk.didlibrary.http.HttpRequest;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 import com.google.gson.Gson;
+import com.qingmei2.library.encode.QRCodeEncoder;
 
 public class ChargeFragment extends BaseFragment {
 
@@ -32,7 +35,7 @@ public class ChargeFragment extends BaseFragment {
         tv_copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(mActivity, "copy success", Toast.LENGTH_SHORT).show();
             }
         });
         tv_reset.setOnClickListener(new View.OnClickListener() {
@@ -45,6 +48,7 @@ public class ChargeFragment extends BaseFragment {
 
     @Override
     protected void initData(@Nullable Bundle savedInstanceState) {
+        initQrView();
         loadBalanceData();
     }
 
@@ -61,6 +65,14 @@ public class ChargeFragment extends BaseFragment {
     @Override
     protected void onFragmentPause() {
 
+    }
+
+    private void initQrView() {
+        String address = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
+        if (!TextUtils.isEmpty(address)) {
+            new QRCodeEncoder(mActivity).createQrCode2ImageView(address, iv_qr, R.drawable.icon_launcher);
+            tv_copy.setText(address);
+        }
     }
 
     private void loadBalanceData() {
