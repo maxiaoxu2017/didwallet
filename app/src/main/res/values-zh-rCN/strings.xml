@@ -30,6 +30,8 @@
     <string name="me_preference_language">语言</string>
     <string name="me_preference_language_select_english">ENGLISH</string>
     <string name="me_preference_language_select_chinese">中文</string>
+    <string name="me_preference_wallet">切换钱包</string>
+
 
     <string name="word_issafe">您的使用环境安全吗</string>
     <string name="word_besafe">请确保周围环境没有隐形摄像头等不安全因素</string>
@@ -40,6 +42,7 @@
     <string name="word_verify">让我们验证您备份的短语</string>
     <string name="word_click">请按照正确的顺序点击每个单词</string>
     <string name="word_iscorrect">这是正确的吗</string>
+    <string name="word_sure">确定</string>
     <string name="word_cleanup">清除</string>
     <string name="word_backdup">您的钱包已经备份了</string>
     <string name="word_tips">请务必将您的恢复短语存储在一个安全的地方。如果这个程序被删除，恢复您的钱包的时候需要它</string>
@@ -51,5 +54,7 @@
     <string name="set_pwd">设置支付密码</string>
 
     <string name="scan_noresult">未扫描到二维码，请重试</string>
+    <string name="btn_next">下一步</string>
+
 
 </resources>

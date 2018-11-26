@@ -51,5 +51,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/bg_roundcorner_blue"
-        android:text="next"/>
+        android:textColor="@android:color/white"
+        android:text="@string/btn_next"
+        android:onClick="onNextClick"/>
 </LinearLayout>

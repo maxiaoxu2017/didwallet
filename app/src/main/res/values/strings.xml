@@ -30,6 +30,7 @@
     <string name="me_preference_language">language</string>
     <string name="me_preference_language_select_english">ENGLISH</string>
     <string name="me_preference_language_select_chinese">中文</string>
+    <string name="me_preference_wallet">Wallet Switch</string>
 
     <string name="word_issafe">Is your environment safe to use?</string>
     <string name="word_besafe">Please make sure there is no security issue in the surrounding environment</string>
@@ -40,6 +41,7 @@
     <string name="word_verify">Let\'s verify your backup phrase</string>
     <string name="word_click">Please click each word in order</string>
     <string name="word_iscorrect">Is this correct?</string>
+    <string name="word_sure">SURE</string>
     <string name="word_cleanup">clean up</string>
     <string name="word_backdup">Your wallet has been backed up</string>
     <string name="word_tips">Please store your phrases in a safe place. If the program is deleted, no phrase will be able to recover the wallet.</string>
@@ -52,4 +54,5 @@
 
 
     <string name="scan_noresult">There\'s no result, Please retry!</string>
+    <string name="btn_next">NEXT</string>
 </resources>

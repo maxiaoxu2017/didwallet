@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.btn_game:
+//                webView.loadUrl("file:///android_asset/Jsonp.html");
                 webView.loadUrl("file:///android_asset/demo.html");
                 break;
             case R.id.button:

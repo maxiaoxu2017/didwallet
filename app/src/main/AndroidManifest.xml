@@ -50,7 +50,9 @@
 
         <activity
             android:name=".activity.BackupTipsActivity"
-            android:process=":didservice"></activity>
+            android:process=":didservice" />
+        <activity android:name=".activity.WordShowActivity" />
+        <activity android:name=".activity.WordInputActivity"></activity>
     </application>
 
 </manifest>

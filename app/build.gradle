@@ -33,8 +33,9 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.google.zxing:core:3.3.0'
-    implementation(name: 'Elastos.ORG.Wallet.Lib-v0.1.2', ext: 'aar')
     implementation(name: 'QrCodeScannerView-Android-1.1.2', ext: 'aar')
+    implementation(name: 'Elastos.ORG.Wallet.Lib-v0.1.2', ext: 'aar')
+    implementation(name: 'customdialog', ext: 'aar')
 //    compile (name: 'nanohttpd-2.2.0', ext: 'jar')
 
 

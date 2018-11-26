@@ -1,5 +1,6 @@
 package com.ela.wallet.sdk.didlibrary.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,9 +30,10 @@ public class BackupTipsActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_backup_tips);
+
+    public void onNextClick(View view) {
+        Intent intent = new Intent();
+        intent.setClass(this, WordShowActivity.class);
+        startActivity(intent);
     }
 }
