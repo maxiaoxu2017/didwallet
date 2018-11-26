@@ -47,12 +47,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
         switch (id) {
             case R.id.btn_back:
-//                if (webView.canGoBack()) {
-//                    webView.goBack();
-//                }
-                Intent intent = new Intent();
-                intent.setClass(this, DemoActivity.class);
-                startActivity(intent);
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                }
+//                Intent intent = new Intent();
+//                intent.setClass(this, DemoActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.btn_game:
 //                webView.loadUrl("file:///android_asset/Jsonp.html");
