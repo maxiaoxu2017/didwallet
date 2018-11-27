@@ -1,5 +1,6 @@
 package com.ela.wallet.sdk.didlibrary.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ela.wallet.sdk.didlibrary.R;
+import com.ela.wallet.sdk.didlibrary.activity.ImportWalletActivity;
 import com.ela.wallet.sdk.didlibrary.base.BaseFragment;
 import com.ela.wallet.sdk.didlibrary.bean.BalanceBean;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
@@ -24,6 +26,7 @@ public class PersonalFragment extends BaseFragment {
     private Button btn_withdraw;
     private RelativeLayout rl_history;
     private RelativeLayout rl_language;
+    private RelativeLayout rl_importwallet;
 
     @Override
     protected void initView(View rootView, @Nullable Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class PersonalFragment extends BaseFragment {
         btn_withdraw = rootView.findViewById(R.id.btn_personal_trans_withdraw);
         rl_history = rootView.findViewById(R.id.rl_personal_history);
         rl_language = rootView.findViewById(R.id.rl_personal_language);
+        rl_importwallet = rootView.findViewById(R.id.rl_personal_wallet);
 
         btn_recharge.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,6 +59,14 @@ public class PersonalFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
 
+            }
+        });
+        rl_importwallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setClass(mActivity, ImportWalletActivity.class);
+                startActivity(intent);
             }
         });
     }

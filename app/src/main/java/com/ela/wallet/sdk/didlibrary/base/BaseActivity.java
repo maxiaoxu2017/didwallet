@@ -7,9 +7,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.activity.BackupTipsActivity;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 
@@ -18,6 +21,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     private String activityName = this.getClass().getSimpleName();
 
+    private TextView tv_title;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         LogUtil.i(activityName + ":onCreate");
@@ -25,6 +30,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         getSupportActionBar().hide();
         setContentView(getRootViewId());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//强制竖屏
+        tv_title = findViewById(R.id.title_tv_title);
+        String title = getTitleText();
+        if (!TextUtils.isEmpty(title)) {
+            tv_title.setText(title);
+        }
         initView();
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -85,6 +95,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         Intent intent = new Intent();
         intent.setClass(this, BackupTipsActivity.class);
         startActivity(intent);
+    }
+
+    public String getTitleText() {
+        return null;
     }
 
 }

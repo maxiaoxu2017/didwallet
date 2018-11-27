@@ -50,11 +50,18 @@
     <string name="word_pwdtips">支付密码不能被恢复，请务必记好（密码长度不小于8位）</string>
 
     <string name="import_wallet">导入钱包</string>
-    <string name="input_phrase">键入恢复短语（通常12个字，字符之间需要空格）</string>
+    <string name="input_phrase">键入恢复短语\n（通常12个字，字符之间需要空格）</string>
     <string name="set_pwd">设置支付密码</string>
+    <string name="import_pwd">请输入密码</string>
+    <string name="import_pwd_again">请再次输入密码</string>
+    <string name="btn_import">导入</string>
+    <string name="dialog_becareful">提示</string>
+    <string name="dialog_switch_wallet">您正在切换钱包，请确保目前的钱包已经备份过</string>
 
     <string name="scan_noresult">未扫描到二维码，请重试</string>
     <string name="btn_next">下一步</string>
+    <string name="btn_cancel">取消</string>
+    <string name="btn_ok">确定</string>
 
 
 </resources>

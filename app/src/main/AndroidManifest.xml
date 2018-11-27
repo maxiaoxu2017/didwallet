@@ -52,7 +52,8 @@
             android:name=".activity.BackupTipsActivity"
             android:process=":didservice" />
         <activity android:name=".activity.WordShowActivity" />
-        <activity android:name=".activity.WordInputActivity"></activity>
+        <activity android:name=".activity.WordInputActivity" />
+        <activity android:name=".activity.ImportWalletActivity"></activity>
     </application>
 
 </manifest>
