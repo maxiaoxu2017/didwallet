@@ -43,7 +43,7 @@ public class Utilty {
     public static String getPreference(String key, String defValue) {
         if (sp == null) {
             try {
-                LogUtil.w("context=" + mContext);
+                LogUtil.w("context=" + getContext());
                 sp = getContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
             } catch (Exception e) {
                 LogUtil.e(e.getMessage());

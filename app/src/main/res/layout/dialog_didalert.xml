@@ -40,6 +40,13 @@
         android:text="body text"
         android:textColor="@color/textBlack"
         android:textSize="14sp"/>
+    <EditText
+        android:id="@+id/et_input"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/import_pwd"/>
 
     <ImageView
         android:layout_width="match_parent"

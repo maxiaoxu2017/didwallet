@@ -8,6 +8,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class DidAlertDialog extends BaseDialog {
     private Button leftButton;
     private Button rightButton;
     private ImageView img_line;
+    private EditText et_input;
 
     private boolean showTitle = false;
     private boolean showMsg = false;
@@ -44,6 +46,8 @@ public class DidAlertDialog extends BaseDialog {
         rightButton.setVisibility(View.GONE);
         img_line = rootView.findViewById(R.id.img_line);
         img_line.setVisibility(View.GONE);
+        et_input = rootView.findViewById(R.id.et_input);
+        et_input.setVisibility(View.GONE);
 
         // set Dialog style
         dialog = new Dialog(context, R.style.AlertDialogStyle);
@@ -100,6 +104,11 @@ public class DidAlertDialog extends BaseDialog {
 
     public DidAlertDialog setMessageGravity(int gravity) {
         txt_msg.setGravity(gravity);
+        return this;
+    }
+
+    public DidAlertDialog setEditText(boolean b) {
+        et_input.setVisibility(b ? View.VISIBLE : View.GONE);
         return this;
     }
 

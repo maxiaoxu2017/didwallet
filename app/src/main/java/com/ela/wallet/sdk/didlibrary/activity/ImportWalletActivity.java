@@ -53,7 +53,9 @@ public class ImportWalletActivity extends BaseActivity {
 
     private void showErrorDialog() {
         new DidAlertDialog(this)
-                .setTitle(getString(R.string.import_wallet))
+                .setTitle(getString(R.string.dialog_unable_import))
+                .setMessage(getString(R.string.dialog_invalid_phrase))
+                .setMessageGravity(Gravity.CENTER)
                 .setRightButton(getString(R.string.btn_ok), null)
                 .show();
     }

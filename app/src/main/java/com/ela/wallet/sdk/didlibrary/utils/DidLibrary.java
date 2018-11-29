@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TextureView;
 import android.widget.Toast;
 
 import com.ela.wallet.sdk.didlibrary.activity.DidLaunchActivity;
@@ -48,7 +49,9 @@ public class DidLibrary {
         if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""))) {
             GenrateMnemonic();
         }
-//        LogUtil.d("did=" + Did());
+        if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID, ""))) {
+            Did();
+        }
 
         return "init success";
     }
@@ -79,8 +82,10 @@ public class DidLibrary {
 
 //        mnemonic = "搅 退 未 晚 亮 盖 做 织 航 尘 阶 票";
 //        language = "chinese";
+        //中文助记词库
+        String allChineseWords = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
         mSeed = new ElastosWallet.Data();
-        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "admin123");
+        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "");
         if (ret <= 0) {
             String errmsg = "Failed to get seed from mnemonic. ret=" + ret + "\n";
             LogUtil.e(errmsg);
@@ -186,7 +191,7 @@ public class DidLibrary {
         }
         message += "idChainMasterPublicKey: " + idChainMasterPublicKey.buf + "\n";
 
-        int count = 10;
+        int count = 1;
         String[] privateKeys = new String[count];
         String[] publicKeys = new String[count];
         String[] dids = new String[count];
@@ -196,6 +201,7 @@ public class DidLibrary {
             dids[idx] = ElastosWalletDID.getDid(publicKeys[idx]);
 
             message += "dids[" + idx + "]: " + dids[idx] + "\n";
+            Utilty.setPreference(mContext, Constants.SP_KEY_DID, dids[idx]);
         }
 
         message += "================================================\n";

@@ -57,8 +57,12 @@
     <string name="btn_import">导入</string>
     <string name="dialog_becareful">提示</string>
     <string name="dialog_switch_wallet">您正在切换钱包，请确保目前的钱包已经备份过</string>
+    <string name="dialog_unable_import">导入失败</string>
+    <string name="dialog_invalid_phrase">无效的助记词短语</string>
+
 
     <string name="scan_noresult">未扫描到二维码，请重试</string>
+    <string name="btn_last">上一步</string>
     <string name="btn_next">下一步</string>
     <string name="btn_cancel">取消</string>
     <string name="btn_ok">确定</string>
