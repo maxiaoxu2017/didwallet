@@ -20,11 +20,15 @@ public class Urls {
     public static String DID_CTX = "/api/1/createTx";
     public static String DID_CCT = "/api/1/createCrossTx";
     public static String DID_SRT = "/api/1/sendRawTx";
+    public static String DID_TX = "/api/1/tx/";
+    public static String DID_ATX = "/api/1/getAllTxs";
     public static String DID_HISTORY = "/api/1/history/";//{address};
 
     public static String ELA_BALANCE = "/api/1/balance/";
     public static String ELA_CTX = "/api/1/createTx";
     public static String ELA_CCT = "/api/1/createCrossTx";
+    public static String ELA_TX = "/api/1/tx/";
+    public static String ELA_ATX = "/api/1/getAllTxs";
     public static String ELA_SRT = "/api/1/sendRawTx";
 
     static {

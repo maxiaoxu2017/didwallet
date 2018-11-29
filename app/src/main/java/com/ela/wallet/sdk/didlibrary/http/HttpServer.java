@@ -69,8 +69,9 @@ public class HttpServer extends NanoHTTPD {
             return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", "HelloWorld");
         }else {
             String uri = session.getUri();
-            LogUtil.w("uri=" + uri);
+            LogUtil.d("uri=" + uri);
             String params = session.getQueryParameterString();
+            LogUtil.d("params=" + params);
             if (uri.startsWith("/api/v1/getDid")) {
                 String did = Utilty.getPreference(Constants.SP_KEY_DID, "");
                 if (TextUtils.isEmpty(did)) {
@@ -89,11 +90,23 @@ public class HttpServer extends NanoHTTPD {
                 String balance = dealWithBalance();
                 return newFixedLengthResponse(Response.Status.OK, "application/json", balance);
             } else if (uri.startsWith("/api/v1/sendTransfer")) {
-
+                String result = null;
+                int type = 1;
+                switch (type) {
+                    case 1:
+                        result = dealWithChongzhi();
+                        break;
+                    case 2:
+                        result = dealWithTiXian();
+                        break;
+                }
+                return newFixedLengthResponse(Response.Status.OK, "application/json", result);
             } else if (uri.startsWith("/api/v1/getTxById")) {
-
+                String trans = dealWithGetTx(params);
+                return newFixedLengthResponse(Response.Status.OK, "application/json", trans);
             } else if (uri.startsWith("/api/v1/getAllTxs")) {
-
+                String allTxs = dealWithAllTxs(params);
+                return newFixedLengthResponse(Response.Status.OK, "application/json", allTxs);
             } else if (uri.startsWith("/api/v1/setDidInfo")) {
 
             } else if (uri.startsWith("/api/v1/getDidInfo")) {
@@ -110,7 +123,6 @@ public class HttpServer extends NanoHTTPD {
      */
     private String balanceResult;
     private String dealWithBalance() {
-        LogUtil.d("dealWithBalance:" + Process.myTid());
         final CountDownLatch countDownLatch = new CountDownLatch(1);
         String url = String.format("%s%s%s", Urls.SERVER_DID, Urls.DID_BALANCE, Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""));
         HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
@@ -130,7 +142,89 @@ public class HttpServer extends NanoHTTPD {
         }catch (InterruptedException e) {
             e.printStackTrace();
         }
-        LogUtil.d("balanceResult==" + balanceResult);
+        LogUtil.d("balanceResult=" + balanceResult);
         return balanceResult;
+    }
+
+    /**
+     * GET http://127.0.0.1:port/api/v1/getTxById?txId=(string:`txid`)
+     * @param  params:`txid`
+     * @return The tranaction data
+     */
+    private String txResult;
+    private String dealWithGetTx(String params) {
+        LogUtil.d("dealWithGetTx:params=" + params);
+        String txId = params.substring(5);
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        String url = String.format("%s%s%s", Urls.SERVER_WALLET, Urls.ELA_TX, txId);
+        HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                txResult = response;
+                countDownLatch.countDown();
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        try {
+            countDownLatch.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return txResult;
+    }
+
+
+    /**
+     * GET http://127.0.0.1:port/api/v1/getAllTxs[?][pageNum=(number:`page number`)][&][pageSize=(number:`page size`)]
+     * @param params
+     * @return
+     */
+    private String allTxs;
+    private String dealWithAllTxs(String params) {
+        params = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        String url = String.format("%s%s%s", Urls.SERVER_DID_HISTORY, Urls.DID_HISTORY, params);
+        HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+                allTxs = response;
+                try {
+                    countDownLatch.await(30, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        return allTxs;
+    }
+
+
+    private String dealWithChongzhi() {
+        String cctUrl = String.format("%s%s%s", Urls.SERVER_WALLET, Urls.ELA_CCT, "");
+        HttpRequest.sendRequestWithHttpURLConnection(cctUrl, new HttpRequest.HttpCallbackListener() {
+            @Override
+            public void onFinish(String response) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+        return "";
+    }
+
+    private String dealWithTiXian() {
+        return "";
     }
 }
