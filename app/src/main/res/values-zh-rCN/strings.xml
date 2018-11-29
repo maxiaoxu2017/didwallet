@@ -66,6 +66,8 @@
     <string name="btn_next">下一步</string>
     <string name="btn_cancel">取消</string>
     <string name="btn_ok">确定</string>
+    <string name="btn_backup">备份</string>
+
 
 
 </resources>

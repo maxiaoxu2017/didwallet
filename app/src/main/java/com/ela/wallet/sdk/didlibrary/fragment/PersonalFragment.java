@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.activity.ImportWalletActivity;
+import com.ela.wallet.sdk.didlibrary.activity.ReChargeActivity;
+import com.ela.wallet.sdk.didlibrary.activity.WithDrawActivity;
 import com.ela.wallet.sdk.didlibrary.base.BaseFragment;
 import com.ela.wallet.sdk.didlibrary.bean.BalanceBean;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
@@ -40,13 +42,17 @@ public class PersonalFragment extends BaseFragment {
         btn_recharge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(mActivity, ReChargeActivity.class);
+                mActivity.startActivity(intent);
             }
         });
         btn_withdraw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(mActivity, WithDrawActivity.class);
+                mActivity.startActivity(intent);
             }
         });
         rl_history.setOnClickListener(new View.OnClickListener() {

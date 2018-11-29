@@ -54,6 +54,8 @@
         <activity android:name=".activity.WordShowActivity" />
         <activity android:name=".activity.WordInputActivity" />
         <activity android:name=".activity.ImportWalletActivity"></activity>
+        <activity android:name=".activity.ReChargeActivity"/>
+        <activity android:name=".activity.WithDrawActivity"/>
     </application>
 
 </manifest>

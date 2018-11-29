@@ -99,6 +99,11 @@ public class HttpServer extends NanoHTTPD {
                     case 2:
                         result = dealWithTiXian();
                         break;
+                    case 3:
+                        result = dealWithZhuanzhang();
+                        break;
+                    case 4:
+                        result = dealWithShoukuan();
                 }
                 return newFixedLengthResponse(Response.Status.OK, "application/json", result);
             } else if (uri.startsWith("/api/v1/getTxById")) {
@@ -225,6 +230,14 @@ public class HttpServer extends NanoHTTPD {
     }
 
     private String dealWithTiXian() {
+        return "";
+    }
+
+    private String dealWithZhuanzhang() {
+        return "";
+    }
+
+    private String dealWithShoukuan() {
         return "";
     }
 }

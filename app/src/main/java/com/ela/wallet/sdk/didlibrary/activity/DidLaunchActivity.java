@@ -1,10 +1,13 @@
 package com.ela.wallet.sdk.didlibrary.activity;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +19,7 @@ import com.ela.wallet.sdk.didlibrary.fragment.HomeFragment;
 import com.ela.wallet.sdk.didlibrary.fragment.PayFragment;
 import com.ela.wallet.sdk.didlibrary.fragment.PersonalFragment;
 import com.ela.wallet.sdk.didlibrary.widget.CustomViewPager;
+import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
 import com.ela.wallet.sdk.didlibrary.widget.TitleFragmentPagerAdapter;
 
 import java.util.ArrayList;
@@ -81,7 +85,9 @@ public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-
+        if (position == 0) {
+            showBackupDialog();
+        }
     }
 
     @Override
@@ -129,6 +135,22 @@ public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageC
         iv_img.setImageResource(tabIcons[position]);
         tv_text.setText(tabTexts[position]);
         return view;
+    }
+
+    private void showBackupDialog() {
+        new DidAlertDialog(this)
+                .setTitle(getString(R.string.send_backup))
+                .setMessage(getString(R.string.send_tips))
+                .setMessageGravity(Gravity.LEFT)
+                .setRightButton(getString(R.string.btn_backup), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(DidLaunchActivity.this, BackupTipsActivity.class);
+                        DidLaunchActivity.this.startActivity(intent);
+                    }
+                })
+                .show();
     }
 
 }

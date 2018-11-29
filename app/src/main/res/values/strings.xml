@@ -65,4 +65,5 @@
     <string name="btn_next">NEXT</string>
     <string name="btn_cancel">cancel</string>
     <string name="btn_ok">ok</string>
+    <string name="btn_backup">Back Up</string>
 </resources>
