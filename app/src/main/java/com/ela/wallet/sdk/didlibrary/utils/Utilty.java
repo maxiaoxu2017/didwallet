@@ -24,14 +24,13 @@ public class Utilty {
         sContext = context;
     }
 
-    private static Context getContext() {
+    public static Context getContext() {
         return sContext == null ? mContext : sContext;
     }
 
-    public static boolean setPreference(@NonNull Context context, String key, String value) {
-        mContext = context;
+    public static boolean setPreference(String key, String value) {
         if (sp == null) {
-            sp = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
+            sp = getContext().getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
         }
 
         SharedPreferences.Editor mEditor = sp.edit();
@@ -52,6 +51,10 @@ public class Utilty {
         }
 
         return sp.getString(key, defValue);
+    }
+
+    public static boolean isBacked() {
+        return "true".equals(Utilty.getPreference(Constants.SP_KEY_DID_ISBACKUP, "false"));
     }
 
     /**
@@ -172,5 +175,21 @@ public class Utilty {
             e1.printStackTrace();
         }
         return s;
+    }
+
+    // 判断一个字符是否是中文
+    public static boolean isChinese(char c) {
+        return c >= 0x4E00 && c <= 0x9FA5;// 根据字节码判断
+    }
+
+    // 判断一个字符串是否含有中文
+    public static boolean isChinese(String str) {
+        if (str == null)
+            return false;
+        for (char c : str.toCharArray()) {
+            if (isChinese(c))
+                return true;// 有一个中文字符就返回
+        }
+        return false;
     }
 }

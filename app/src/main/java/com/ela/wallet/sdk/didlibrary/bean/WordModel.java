@@ -6,6 +6,15 @@ public class WordModel {
     private String word;
     private boolean clicked;
 
+    public WordModel() {
+
+    }
+
+    public WordModel(String word, boolean clicked) {
+        this.word = word;
+        this.clicked = clicked;
+    }
+
     public String getWord() {
         return word;
     }

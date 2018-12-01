@@ -184,7 +184,7 @@
             android:layout_marginTop="27dp"
             android:layout_marginLeft="20dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_language"/>
+            android:src="@drawable/ic_wallet_white"/>
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"

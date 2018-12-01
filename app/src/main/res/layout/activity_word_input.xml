@@ -79,7 +79,7 @@
         android:background="@drawable/bg_roundcorner_trans"
         android:textColor="@color/appColor"
         android:text="@string/word_cleanup"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:visibility="visible"/>
 
 </LinearLayout>

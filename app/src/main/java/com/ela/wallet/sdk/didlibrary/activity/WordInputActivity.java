@@ -23,6 +23,7 @@ import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
 import com.ela.wallet.sdk.didlibrary.widget.GridRecyclerViewAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WordInputActivity extends BaseActivity {
@@ -59,12 +60,10 @@ public class WordInputActivity extends BaseActivity {
         btn_ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sb.delete(0, sb.length());
-                for (WordModel word : wordList) {
-                    sb.append(word.getWord());
-                }
                 Utilty.getPreference(Constants.SP_KEY_DID_MNEMONIC, "");
-                if (sb.toString().equals(mnemonicWord.trim())) {
+                String s1 = sb.toString();
+                String s2 = mnemonicWord.trim().replaceAll(" ", "");
+                if (s1.equals(s2)) {
                     showSuccessDialog();
                 } else {
                     Toast.makeText(WordInputActivity.this, getString(R.string.word_wrong), Toast.LENGTH_SHORT).show();
@@ -80,11 +79,12 @@ public class WordInputActivity extends BaseActivity {
                 mWordShowAdapter.notifyDataSetChanged();
                 wordInputList.clear();
                 mWordInputAdapter.notifyDataSetChanged();
+                sb.delete(0, sb.length());
 
                 tv_word_tips.setText(getString(R.string.word_click));
                 rv_show.setVisibility(View.VISIBLE);
                 btn_ok.setVisibility(View.GONE);
-                btn_clear.setVisibility(View.GONE);
+                btn_clear.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -99,6 +99,7 @@ public class WordInputActivity extends BaseActivity {
             wordModel.setWord(s);
             wordList.add(wordModel);
         }
+        Collections.shuffle(wordList);
         mWordShowAdapter = new GridRecyclerViewAdapter(this, wordList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         rv_show.setLayoutManager(gridLayoutManager);
@@ -114,6 +115,7 @@ public class WordInputActivity extends BaseActivity {
                 wordInputList.add(wordModel);
                 mWordInputAdapter.notifyDataSetChanged();
                 textView.setClickable(false);
+                sb.append(mInputWord);
 
                 if(wordInputList.size() >= 12) {
                     tv_word_tips.setText(getString(R.string.word_iscorrect));
@@ -177,6 +179,7 @@ public class WordInputActivity extends BaseActivity {
                         showPwdInputDialog();
                     }
                 })
+                .setCancelable(false)
                 .show();
     }
 
@@ -186,23 +189,24 @@ public class WordInputActivity extends BaseActivity {
                 .setMessage(getString(R.string.word_pwdtips))
                 .setMessageGravity(Gravity.LEFT)
                 .setEditText(true)
-                .setLeftButton(getString(R.string.btn_last), new View.OnClickListener() {
+//                .setLeftButton(getString(R.string.btn_last), new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View view) {
+//                        showSuccessDialog();
+//                    }
+//                })
+                .setRightButton(getString(R.string.btn_ok), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showSuccessDialog();
-                    }
-                })
-                .setRightButton(getString(R.string.btn_next), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //todo:clear top
                         String password = pwdDialog.getEditTextView().getText().toString();
                         if (TextUtils.isEmpty(password) || password.length() < 8) {
                             Toast.makeText(WordInputActivity.this, getString(R.string.toast_pwd_notcorrect), Toast.LENGTH_SHORT).show();
                             showPwdInputDialog();
                             return;
                         }
-                        Utilty.setPreference(WordInputActivity.this, Constants.SP_KEY_DID_PASSWORD, password);
+                        Utilty.setPreference(Constants.SP_KEY_DID_PASSWORD, password);
+                        Utilty.setPreference(Constants.SP_KEY_DID_ISBACKUP, "true");
+                        Utilty.setPreference(Constants.SP_KEY_DID_MNEMONIC, "");
                         Toast.makeText(WordInputActivity.this, getString(R.string.word_backdup), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
                         intent.setClass(WordInputActivity.this, DidLaunchActivity.class);
@@ -210,6 +214,7 @@ public class WordInputActivity extends BaseActivity {
                         WordInputActivity.this.startActivity(intent);
                     }
                 })
+                .setCancelable(false)
                 .show();
     }
 }

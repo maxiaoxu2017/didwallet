@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.activity.ImportWalletActivity;
+import com.ela.wallet.sdk.didlibrary.activity.LanguageActivity;
 import com.ela.wallet.sdk.didlibrary.activity.ReChargeActivity;
 import com.ela.wallet.sdk.didlibrary.activity.WithDrawActivity;
 import com.ela.wallet.sdk.didlibrary.base.BaseFragment;
@@ -64,7 +65,9 @@ public class PersonalFragment extends BaseFragment {
         rl_language.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent();
+                intent.setClass(mActivity, LanguageActivity.class);
+                startActivity(intent);
             }
         });
         rl_importwallet.setOnClickListener(new View.OnClickListener() {

@@ -24,6 +24,7 @@ import org.elastos.wallet.lib.ElastosWalletSign;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class DidLibrary {
 
@@ -46,13 +47,14 @@ public class DidLibrary {
         Intent intent = new Intent();
         intent.setClass(context, DidService.class);
         context.startService(intent);
-        if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""))) {
+        if (!"true".equals(Utilty.getPreference(Constants.SP_KEY_DID_ISBACKUP, "false")) &&
+                TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID_MNEMONIC, ""))) {
             GenrateMnemonic();
         }
         if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID, ""))) {
             Did();
         }
-
+        LogUtil.e(Utilty.isChinese("罚 津 召 抬 裁 蛋 摇 侵 式 桃 铺 豪")+"");
         return "init success";
     }
 
@@ -81,7 +83,7 @@ public class DidLibrary {
             message += errmsg;
             return message;
         }
-        Utilty.setPreference(mContext, Constants.SP_KEY_DID_MNEMONIC, mnemonic);
+        Utilty.setPreference(Constants.SP_KEY_DID_MNEMONIC, mnemonic);
         message += "mnemonic: " + mnemonic + "\n";
 
 //        mnemonic = "搅 退 未 晚 亮 盖 做 织 航 尘 阶 票";
@@ -109,7 +111,7 @@ public class DidLibrary {
         }
         mPrivateKey = privateKey;
         message += "privateKey: " + privateKey + "\n";
-        Utilty.setPreference(mContext, Constants.SP_KEY_DID_PRIVATEKEY, privateKey);
+        Utilty.setPreference(Constants.SP_KEY_DID_PRIVATEKEY, privateKey);
         LogUtil.d("privatekey=" + privateKey);
 
         String publicKey = ElastosWallet.getSinglePublicKey(mSeed, mSeedLen);
@@ -131,7 +133,7 @@ public class DidLibrary {
             return message;
         }
         message += "address: " + address + "\n";
-        Utilty.setPreference(mContext, Constants.SP_KEY_DID_ADDRESS, address);
+        Utilty.setPreference(Constants.SP_KEY_DID_ADDRESS, address);
 
         ElastosWallet.Data data = new ElastosWallet.Data();
         data.buf = new byte[]{0, 1, 2, 3, 4, 5};
@@ -205,7 +207,7 @@ public class DidLibrary {
             dids[idx] = ElastosWalletDID.getDid(publicKeys[idx]);
 
             message += "dids[" + idx + "]: " + dids[idx] + "\n";
-            Utilty.setPreference(mContext, Constants.SP_KEY_DID, dids[idx]);
+            Utilty.setPreference(Constants.SP_KEY_DID, dids[idx]);
         }
 
         message += "================================================\n";
@@ -470,6 +472,108 @@ public class DidLibrary {
             e.printStackTrace();
         }
         return returnData;
+    }
+
+
+
+
+
+
+
+    public static boolean importWallet(String mnemonic) {
+        LogUtil.i("importWallet mnemonic=" + mnemonic);
+        String language = "";
+        String words = "";
+        String sp_lang = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
+        if (TextUtils.isEmpty(sp_lang)) {
+            if (Utilty.isChinese(mnemonic)) {
+                language = "chinese";
+            } else {
+                language = "english";
+            }
+        } else {
+            language = sp_lang;
+        }
+
+        if (language.equals("chinese")) {
+            words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
+        } else {
+            words = "";
+        }
+
+        mSeed = new ElastosWallet.Data();
+        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "");
+        if (ret <= 0) {
+            String errmsg = "Failed to get seed from mnemonic. ret=" + ret + "\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+        mSeedLen = ret;
+
+        String privateKey = ElastosWallet.getSinglePrivateKey(mSeed, mSeedLen);
+        if (privateKey == null) {
+            String errmsg = "Failed to generate privateKey.\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+        LogUtil.d("privatekey=" + privateKey);
+
+        String publicKey = ElastosWallet.getSinglePublicKey(mSeed, mSeedLen);
+        if (publicKey == null) {
+            String errmsg = "Failed to generate publicKey.\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+
+        String address = ElastosWallet.getAddress(publicKey);
+        if (address == null) {
+            String errmsg = "Failed to get address.\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+
+        ElastosWallet.Data data = new ElastosWallet.Data();
+        data.buf = new byte[]{0, 1, 2, 3, 4, 5};
+        ElastosWallet.Data signedData = new ElastosWallet.Data();
+        int signedLen = ElastosWallet.sign(privateKey, data, data.buf.length, signedData);
+        if (signedLen <= 0) {
+            String errmsg = "Failed to sign data.\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+
+        boolean verified = ElastosWallet.verify(publicKey, data, data.buf.length, signedData, signedLen);
+        if (!verified) {
+            return false;
+        }
+
+        ElastosWallet.Data idChainMasterPublicKey = ElastosWalletDID.getIdChainMasterPublicKey(mSeed, mSeedLen);
+        if (idChainMasterPublicKey == null) {
+            String errmsg = "Failed to generate id chain master publicKey.\n";
+            LogUtil.e(errmsg);
+            return false;
+        }
+
+        int count = 1;
+        String[] privateKeys = new String[count];
+        String[] publicKeys = new String[count];
+        String[] dids = new String[count];
+        for (int idx = 0; idx < count; idx++) {
+            privateKeys[idx] = ElastosWalletDID.generateIdChainSubPrivateKey(mSeed, mSeedLen, 0, idx);
+            publicKeys[idx] = ElastosWalletDID.generateIdChainSubPublicKey(idChainMasterPublicKey, 0, idx);
+            dids[idx] = ElastosWalletDID.getDid(publicKeys[idx]);
+
+            Utilty.setPreference(Constants.SP_KEY_DID, dids[idx]);
+        }
+
+        //after import success:
+        mPrivateKey = privateKey;
+        Utilty.setPreference(Constants.SP_KEY_DID_PRIVATEKEY, privateKey);
+        Utilty.setPreference(Constants.SP_KEY_DID_ADDRESS, address);
+        Utilty.setPreference(Constants.SP_KEY_DID_ISBACKUP, "true");
+        Utilty.setPreference(Constants.SP_KEY_DID_MNEMONIC, "");
+        Utilty.setPreference(Constants.SP_KEY_APP_LANGUAGE, language);
+        return true;
     }
 
 }

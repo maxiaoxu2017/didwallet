@@ -1,9 +1,12 @@
 package com.ela.wallet.sdk.didlibrary.activity;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,12 +21,15 @@ import com.ela.wallet.sdk.didlibrary.fragment.ChargeFragment;
 import com.ela.wallet.sdk.didlibrary.fragment.HomeFragment;
 import com.ela.wallet.sdk.didlibrary.fragment.PayFragment;
 import com.ela.wallet.sdk.didlibrary.fragment.PersonalFragment;
+import com.ela.wallet.sdk.didlibrary.global.Constants;
+import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 import com.ela.wallet.sdk.didlibrary.widget.CustomViewPager;
 import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
 import com.ela.wallet.sdk.didlibrary.widget.TitleFragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageChangeListener, TabLayout.OnTabSelectedListener{
 
@@ -56,6 +62,21 @@ public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageC
 
     @Override
     protected void initData() {
+        String language = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
+        Resources resources = getResources();
+        DisplayMetrics dm = resources.getDisplayMetrics();
+        Configuration config = resources.getConfiguration();
+        // 应用用户选择语言
+        if ("chinese".equals(language)) {
+            config.locale = Locale.SIMPLIFIED_CHINESE;
+        } else if ("english".equals(language)){
+            config.locale = Locale.ENGLISH;
+        } else {
+            config.locale = Locale.getDefault();
+        }
+        resources.updateConfiguration(config, dm);
+        setTitleText(getResources().getString(R.string.library_name));
+
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
         fragments.add(new ChargeFragment());

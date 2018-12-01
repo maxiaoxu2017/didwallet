@@ -101,4 +101,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return null;
     }
 
+    public void setTitleText(String text) {
+        tv_title.setText(text);
+    }
+
 }

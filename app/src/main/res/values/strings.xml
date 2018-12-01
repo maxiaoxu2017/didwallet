@@ -47,11 +47,11 @@
     <string name="word_backdup">Your wallet has been backed up</string>
     <string name="word_tips">Please store your phrases in a safe place. If the program is deleted, no phrase will be able to recover the wallet.</string>
     <string name="word_newpwd">Please enter a new payment password</string>
-    <string name="word_pwdtips">Payment password can not be resumed. Be sure to remember it well.(at least 8bits)</string>
+    <string name="word_pwdtips">Payment password can not be resumed. Be sure to remember it well.(at least 8 bits)</string>
 
     <string name="import_wallet">Import the wallet</string>
     <string name="input_phrase">Please input backup phrase.\n(Usually 12 words, spaces between words.)</string>
-    <string name="set_pwd">Set payment password</string>
+    <string name="set_pwd">Set payment password(at least 8 bits)</string>
     <string name="import_pwd">password</string>
     <string name="import_pwd_again">again</string>
     <string name="btn_import">import</string>
@@ -63,6 +63,8 @@
 
     <string name="scan_noresult">There\'s no result, Please retry!</string>
     <string name="toast_pwd_notcorrect">The length of password is too short</string>
+    <string name="toast_pwd_same">The passwords are inconsistent</string>
+    <string name="toast_import_success">Import Success!</string>
     <string name="btn_last">LAST</string>
     <string name="btn_next">NEXT</string>
     <string name="btn_cancel">cancel</string>
