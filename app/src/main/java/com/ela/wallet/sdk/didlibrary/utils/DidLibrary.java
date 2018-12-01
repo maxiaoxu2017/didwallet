@@ -68,8 +68,11 @@ public class DidLibrary {
     private static String GenrateMnemonic() {
         LogUtil.d("GenrateMnemonic");
         String message = "";
-        String language = "english";
-        String words = "";
+        String language = "chinese";
+        String words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
+//        String language = "english";
+//        String words = "";
+
 
         String mnemonic = ElastosWallet.generateMnemonic(language, words);
         if (mnemonic == null) {
@@ -78,12 +81,13 @@ public class DidLibrary {
             message += errmsg;
             return message;
         }
+        Utilty.setPreference(mContext, Constants.SP_KEY_DID_MNEMONIC, mnemonic);
         message += "mnemonic: " + mnemonic + "\n";
 
 //        mnemonic = "搅 退 未 晚 亮 盖 做 织 航 尘 阶 票";
 //        language = "chinese";
         //中文助记词库
-        String allChineseWords = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
+//        String allChineseWords = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
         mSeed = new ElastosWallet.Data();
         int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "");
         if (ret <= 0) {

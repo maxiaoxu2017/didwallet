@@ -44,6 +44,7 @@
     <string name="word_iscorrect">这是正确的吗</string>
     <string name="word_sure">确定</string>
     <string name="word_cleanup">清除</string>
+    <string name="word_wrong">助记词短语不正确，请重试！</string>
     <string name="word_backdup">您的钱包已经备份了</string>
     <string name="word_tips">请务必将您的恢复短语存储在一个安全的地方。如果这个程序被删除，恢复您的钱包的时候需要它</string>
     <string name="word_newpwd">请输入新的支付密码</string>
@@ -62,6 +63,7 @@
 
 
     <string name="scan_noresult">未扫描到二维码，请重试</string>
+    <string name="toast_pwd_notcorrect">密码长度不正确，请重试！</string>
     <string name="btn_last">上一步</string>
     <string name="btn_next">下一步</string>
     <string name="btn_cancel">取消</string>

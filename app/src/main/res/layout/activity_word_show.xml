@@ -21,11 +21,15 @@
         android:text="@string/word_remember" />
 
     <TextView
+        android:id="@+id/tv_word_show"
         android:layout_width="match_parent"
         android:layout_height="135dp"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:gravity="center"
+        android:textColor="@color/appColor"
+        android:textSize="20sp"
         android:background="@drawable/bg_dashline_gray"/>
 
     <TextView

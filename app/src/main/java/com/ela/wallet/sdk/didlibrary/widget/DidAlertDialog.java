@@ -112,6 +112,10 @@ public class DidAlertDialog extends BaseDialog {
         return this;
     }
 
+    public EditText getEditTextView() {
+        return this.et_input;
+    }
+
     public DidAlertDialog setRightButton(String text, final View.OnClickListener listener) {
         int color = mContext.getResources().getColor(R.color.appColor);
         return setRightButton(text, color, 18, true, listener);

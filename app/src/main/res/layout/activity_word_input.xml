@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <include
@@ -20,42 +21,65 @@
         android:textColor="@color/textBlack"
         android:text="@string/word_verify" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="135dp"
         android:layout_marginTop="40dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:background="@drawable/bg_dashline_gray"/>
+        android:background="@drawable/bg_dashline_gray">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_word_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_word_input_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:textColor="@color/textBlack"
         android:textSize="14sp"
         android:text="@string/word_click"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_word_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+    </android.support.v7.widget.RecyclerView>
+
     <Button
+        android:id="@+id/btn_ok"
         android:layout_width="match_parent"
         android:layout_height="53dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/bg_roundcorner_blue"
         android:textColor="@android:color/white"
         android:text="@string/word_sure"
-        android:onClick="onSureClick"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
+    <Button
+        android:id="@+id/btn_clear"
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_roundcorner_trans"
+        android:textColor="@color/appColor"
         android:text="@string/word_cleanup"
-        android:onClick="onCleanClick"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </LinearLayout>
