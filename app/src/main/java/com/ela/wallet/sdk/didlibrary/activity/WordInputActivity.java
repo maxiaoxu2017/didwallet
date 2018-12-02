@@ -136,11 +136,6 @@ public class WordInputActivity extends BaseActivity {
         sb = new StringBuffer();
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     public void onSureClick(View view) {
         sb.delete(0, sb.length());
         for (WordModel word : wordList) {

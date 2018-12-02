@@ -82,8 +82,4 @@ public class LanguageActivity extends BaseActivity {
         });
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
 }

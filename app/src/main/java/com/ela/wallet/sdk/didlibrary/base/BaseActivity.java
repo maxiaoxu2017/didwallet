@@ -17,7 +17,7 @@ import com.ela.wallet.sdk.didlibrary.activity.BackupTipsActivity;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity{
 
     private String activityName = this.getClass().getSimpleName();
 

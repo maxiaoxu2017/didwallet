@@ -22,11 +22,6 @@ public class ReChargeActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     public void onOKClick(View view) {
 
     }

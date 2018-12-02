@@ -25,12 +25,6 @@ public class BackupTipsActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
-
     public void onNextClick(View view) {
         Intent intent = new Intent();
         intent.setClass(this, WordShowActivity.class);

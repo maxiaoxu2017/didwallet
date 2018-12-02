@@ -1,9 +1,10 @@
 <resources>
-    <string name="library_name">DID钱包</string>
+    <string name="library_name">DID信息</string>
     <string name="nav_home">首页</string>
     <string name="nav_charges">收钱</string>
     <string name="nav_pay">付钱</string>
     <string name="nav_mine">我</string>
+    <string name="nav_all">全部</string>
 
     <string name="home_wallet">钱包</string>
     <string name="home_wallet_name">个人钱包</string>
@@ -25,6 +26,7 @@
 
     <string name="me_recharge">充值</string>
     <string name="me_withdraw">提现</string>
+    <string name="me_records">交易记录</string>
     <string name="me_history">充值和提现记录</string>
     <string name="me_preference">偏好设置</string>
     <string name="me_preference_language">语言</string>

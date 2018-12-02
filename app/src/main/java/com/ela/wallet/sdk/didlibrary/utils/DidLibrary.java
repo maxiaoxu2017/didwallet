@@ -10,6 +10,7 @@ import android.view.TextureView;
 import android.widget.Toast;
 
 import com.ela.wallet.sdk.didlibrary.activity.DidLaunchActivity;
+import com.ela.wallet.sdk.didlibrary.activity.HomeActivity;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
 import com.ela.wallet.sdk.didlibrary.global.Urls;
 import com.ela.wallet.sdk.didlibrary.http.HttpRequest;
@@ -63,7 +64,7 @@ public class DidLibrary {
         if (context instanceof Application) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        intent.setClass(context, DidLaunchActivity.class);
+        intent.setClass(context, HomeActivity.class);
         context.startActivity(intent);
     }
 

@@ -34,12 +34,6 @@ public class WordShowActivity extends BaseActivity{
         tv_word_show.setText(words);
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
-
     public void onOKClick(View view) {
         Intent intent = new Intent();
         intent.setClass(this, WordInputActivity.class);

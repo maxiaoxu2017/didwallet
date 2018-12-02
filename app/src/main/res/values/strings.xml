@@ -1,9 +1,10 @@
 <resources>
-    <string name="library_name">DidWallet</string>
+    <string name="library_name">DidInfo</string>
     <string name="nav_home">home</string>
     <string name="nav_charges">receive</string>
     <string name="nav_pay">send</string>
     <string name="nav_mine">me</string>
+    <string name="nav_all">All</string>
 
     <string name="home_wallet">wallet</string>
     <string name="home_wallet_name">Personal Wallet</string>
@@ -25,6 +26,7 @@
 
     <string name="me_recharge">Recharge</string>
     <string name="me_withdraw">withdraw</string>
+    <string name="me_records">records</string>
     <string name="me_history">Recharge and withdraw record</string>
     <string name="me_preference">preference</string>
     <string name="me_preference_language">language</string>

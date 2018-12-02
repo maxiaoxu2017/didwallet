@@ -38,11 +38,6 @@ public class ScanActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     protected void initView() {
         mContext =this;
         scanner=findViewById(R.id.scanner);

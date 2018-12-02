@@ -56,7 +56,12 @@
         <activity android:name=".activity.ImportWalletActivity" />
         <activity android:name=".activity.ReChargeActivity" />
         <activity android:name=".activity.WithDrawActivity" />
-        <activity android:name=".activity.LanguageActivity"></activity>
+        <activity android:name=".activity.LanguageActivity" />
+        <activity android:name=".activity.PersonalActivity" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.ReceiveActivity" />
+        <activity android:name=".activity.SendActivity" />
+        <activity android:name=".activity.RecordsActivity"></activity>
     </application>
 
 </manifest>

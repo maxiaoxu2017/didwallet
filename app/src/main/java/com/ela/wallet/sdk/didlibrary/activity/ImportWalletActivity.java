@@ -39,11 +39,6 @@ public class ImportWalletActivity extends BaseActivity {
     }
 
     @Override
-    public void onClick(View view) {
-
-    }
-
-    @Override
     protected void onDestroy() {
         if (mConfirmDialog != null && mConfirmDialog.isShowing()) {
             mConfirmDialog.dismiss();

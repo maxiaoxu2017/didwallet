@@ -135,11 +135,6 @@ public class DidLaunchActivity extends BaseActivity implements ViewPager.OnPageC
 
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
-
     public void onLeftNavClick(View view) {
         finish();
     }
