@@ -1,9 +1,11 @@
 package com.ela.wallet.sdk.didlibrary.activity;
 
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,7 +17,9 @@ import com.ela.wallet.sdk.didlibrary.bean.BalanceBean;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
 import com.ela.wallet.sdk.didlibrary.global.Urls;
 import com.ela.wallet.sdk.didlibrary.http.HttpRequest;
+import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
+import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
 import com.google.gson.Gson;
 import com.qingmei2.library.encode.QRCodeEncoder;
 
@@ -42,7 +46,10 @@ public class ReceiveActivity extends BaseActivity {
         tv_reset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                String newAddress = DidLibrary.resetAddress();
+                if (!TextUtils.isEmpty(newAddress)) {
+                    initQrView();
+                }
             }
         });
     }
@@ -51,6 +58,9 @@ public class ReceiveActivity extends BaseActivity {
     protected void initData() {
         initQrView();
         loadBalanceData();
+        if (!Utilty.isBacked()) {
+            showBackupDialog();
+        }
     }
 
     @Override
@@ -93,6 +103,22 @@ public class ReceiveActivity extends BaseActivity {
                 });
             }
         });
+    }
+
+    private void showBackupDialog() {
+        new DidAlertDialog(this)
+                .setTitle(getString(R.string.send_backup))
+                .setMessage(getString(R.string.send_tips))
+                .setMessageGravity(Gravity.LEFT)
+                .setRightButton(getString(R.string.btn_backup), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(ReceiveActivity.this, BackupTipsActivity.class);
+                        ReceiveActivity.this.startActivity(intent);
+                    }
+                })
+                .show();
     }
 
 }

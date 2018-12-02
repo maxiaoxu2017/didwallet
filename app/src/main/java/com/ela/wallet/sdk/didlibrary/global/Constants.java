@@ -5,6 +5,7 @@ public class Constants {
     public static final boolean isDebug = true;
 
     public static final String SP_KEY_DID_PRIVATEKEY = "did_privatekey";
+    public static final String SP_KEY_DID_PUBLICKEY = "did_publickey";
     public static final String SP_KEY_DID = "did";
     public static final String SP_KEY_DID_ADDRESS = "did_address";
     public static final String SP_KEY_DID_MNEMONIC = "did_mnemonic";

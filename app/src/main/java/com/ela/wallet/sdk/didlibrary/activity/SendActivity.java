@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -13,6 +14,8 @@ import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseActivity;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
+import com.ela.wallet.sdk.didlibrary.utils.Utilty;
+import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
 
 public class SendActivity extends BaseActivity {
 
@@ -37,7 +40,9 @@ public class SendActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-
+        if (!Utilty.isBacked()) {
+            showBackupDialog();
+        }
     }
 
     @Override
@@ -53,5 +58,21 @@ public class SendActivity extends BaseActivity {
             String result = data.getStringExtra(Constants.INTENT_PARAM_KEY_SCANRESUTL);
             et_scan_address.setText(result);
         }
+    }
+
+    private void showBackupDialog() {
+        new DidAlertDialog(this)
+                .setTitle(getString(R.string.send_backup))
+                .setMessage(getString(R.string.send_tips))
+                .setMessageGravity(Gravity.LEFT)
+                .setRightButton(getString(R.string.btn_backup), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent();
+                        intent.setClass(SendActivity.this, BackupTipsActivity.class);
+                        SendActivity.this.startActivity(intent);
+                    }
+                })
+                .show();
     }
 }

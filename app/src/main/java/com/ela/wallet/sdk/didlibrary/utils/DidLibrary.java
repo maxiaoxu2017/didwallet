@@ -55,7 +55,6 @@ public class DidLibrary {
         if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID, ""))) {
             Did();
         }
-        LogUtil.e(Utilty.isChinese("罚 津 召 抬 裁 蛋 摇 侵 式 桃 铺 豪")+"");
         return "init success";
     }
 
@@ -71,10 +70,16 @@ public class DidLibrary {
     private static String GenrateMnemonic() {
         LogUtil.d("GenrateMnemonic");
         String message = "";
-        String language = "chinese";
-        String words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
-//        String language = "english";
-//        String words = "";
+        String language = "";
+        String words = "";
+        String sp_lang = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
+        if ("chinese".equals(sp_lang)) {
+            language = "chinese";
+            words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
+        } else {
+            language = "english";
+            words = "";
+        }
 
 
         String mnemonic = ElastosWallet.generateMnemonic(language, words);
@@ -123,6 +128,7 @@ public class DidLibrary {
 
             return message;
         }
+        Utilty.setPreference(Constants.SP_KEY_DID_PUBLICKEY, publicKey);
         message += "publicKey: " + publicKey + "\n";
 
         String address = ElastosWallet.getAddress(publicKey);
@@ -570,11 +576,19 @@ public class DidLibrary {
         //after import success:
         mPrivateKey = privateKey;
         Utilty.setPreference(Constants.SP_KEY_DID_PRIVATEKEY, privateKey);
+        Utilty.setPreference(Constants.SP_KEY_DID_PUBLICKEY, publicKey);
         Utilty.setPreference(Constants.SP_KEY_DID_ADDRESS, address);
         Utilty.setPreference(Constants.SP_KEY_DID_ISBACKUP, "true");
         Utilty.setPreference(Constants.SP_KEY_DID_MNEMONIC, "");
         Utilty.setPreference(Constants.SP_KEY_APP_LANGUAGE, language);
         return true;
+    }
+
+    public static String resetAddress() {
+        String address = ElastosWallet.getAddress(Utilty.getPreference(Constants.SP_KEY_DID_PUBLICKEY, ""));
+        if (TextUtils.isEmpty(address)) return null;
+        Utilty.setPreference(Constants.SP_KEY_DID_ADDRESS, address);
+        return address;
     }
 
 }
