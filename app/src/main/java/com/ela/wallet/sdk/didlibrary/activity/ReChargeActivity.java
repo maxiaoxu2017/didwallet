@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseActivity;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
+import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
@@ -47,7 +48,9 @@ public class ReChargeActivity extends BaseActivity {
     }
 
     public void onOKClick(View view) {
-
+        //todo:
+//        String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
+//        DidLibrary.Chongzhi(fromAddress, "1");
     }
 
     @Override

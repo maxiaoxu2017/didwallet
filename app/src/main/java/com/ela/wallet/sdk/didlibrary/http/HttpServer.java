@@ -214,6 +214,9 @@ public class HttpServer extends NanoHTTPD {
 
 
     private String dealWithChongzhi() {
+        String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
+        DidLibrary.Chongzhi(fromAddress, "1");
+
         String cctUrl = String.format("%s%s%s", Urls.SERVER_WALLET, Urls.ELA_CCT, "");
         HttpRequest.sendRequestWithHttpURLConnection(cctUrl, new HttpRequest.HttpCallbackListener() {
             @Override

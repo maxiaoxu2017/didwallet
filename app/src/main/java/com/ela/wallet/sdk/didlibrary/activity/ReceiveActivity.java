@@ -49,6 +49,7 @@ public class ReceiveActivity extends BaseActivity {
                 String newAddress = DidLibrary.resetAddress();
                 if (!TextUtils.isEmpty(newAddress)) {
                     initQrView();
+                    loadBalanceData();
                 }
             }
         });

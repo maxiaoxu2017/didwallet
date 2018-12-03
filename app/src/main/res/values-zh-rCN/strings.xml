@@ -11,6 +11,7 @@
     <string name="home_balance">钱包余额</string>
     <string name="home_expense">支出</string>
     <string name="home_income">收入</string>
+    <string name="home_didinfo">DID记录</string>
 
     <string name="charge_copytips">(点击复制地址)</string>
     <string name="charge_reset">重置地址</string>

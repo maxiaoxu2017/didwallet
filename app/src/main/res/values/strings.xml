@@ -11,6 +11,7 @@
     <string name="home_balance">Walletbalance</string>
     <string name="home_expense">expense</string>
     <string name="home_income">income</string>
+    <string name="home_didinfo">did info</string>
 
     <string name="charge_copytips">(Click to copy address)</string>
     <string name="charge_reset">Reset address</string>

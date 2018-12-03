@@ -154,14 +154,13 @@ public class HomeActivity extends BaseActivity {
         mList = new ArrayList<>();
         mList1 = new ArrayList<>();
         mList2 = new ArrayList<>();
-        mList.add(new RecordsModel(getString(R.string.nav_charges), "20/11/2018", "+1.5 ELA"));
-        mList.add(new RecordsModel(getString(R.string.nav_pay), "20/11/2018", "-0.5 ELA"));
+        mList.add(new RecordsModel("did1@did.com", "1585555555555", "02/12/2018"));
         for(RecordsModel records : mList) {
-            if (getString(R.string.nav_charges).equals(records.getType())) {
+//            if (getString(R.string.nav_charges).equals(records.getType())) {
                 mList1.add(records);
-            } else if(getString(R.string.nav_pay).equals(records.getType())) {
+//            } else if(getString(R.string.nav_pay).equals(records.getType())) {
                 mList2.add(records);
-            }
+//            }
         }
     }
 }

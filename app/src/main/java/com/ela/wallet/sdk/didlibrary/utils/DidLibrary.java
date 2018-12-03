@@ -43,8 +43,8 @@ public class DidLibrary {
 
     public static String init(Context context) {
         LogUtil.d("init");
-        mContext = context;
         Utilty.setContext(context);
+        mContext = context;
         Intent intent = new Intent();
         intent.setClass(context, DidService.class);
         context.startService(intent);
@@ -224,8 +224,8 @@ public class DidLibrary {
     /**
      * 充值 ELA-DID
      */
-    public static void testChongzhi() {
-        String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
+    public static void Chongzhi(String address, String amount) {
+        String fromAddress = address;
         String toAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
         String param = String.format("  {\"inputs\":[\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":100000000}]}", toAddress);
         LogUtil.d("chongzhi param=" + param);
@@ -233,31 +233,19 @@ public class DidLibrary {
             @Override
             public void onFinish(final String response) {
                 LogUtil.d("chongzhi response=" + response);
-                ((Activity) mContext).runOnUiThread(new Runnable() {
+                String signed = testSignTxData();
+                LogUtil.d("chongzhi signed data=" + signed);
+                String signdparam = String.format("{\"data\":\"%s\"}", signed);
+                LogUtil.d("chongzhi srt data=" + signdparam);
+                HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                     @Override
-                    public void run() {
-                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = testSignTxData();
-                        LogUtil.d("chongzhi signed data=" + signed);
-                        String signdparam = String.format("{\"data\":\"%s\"}", signed);
-                        LogUtil.d("chongzhi srt data=" + signdparam);
-                        HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
-                            @Override
-                            public void onFinish(final String response) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LogUtil.d("chongzhi srt result:" + response);
-                                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                    public void onFinish(final String response) {
+                        LogUtil.d("chongzhi srt result:" + response);
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
+                    @Override
+                    public void onError(Exception e) {
 
-                            }
-                        });
                     }
                 });
             }
@@ -482,11 +470,11 @@ public class DidLibrary {
     }
 
 
-
-
-
-
-
+    /**
+     * 导入钱包
+     * @param mnemonic
+     * @return true:if import success;false:otherwise
+     */
     public static boolean importWallet(String mnemonic) {
         LogUtil.i("importWallet mnemonic=" + mnemonic);
         String language = "";
@@ -584,6 +572,10 @@ public class DidLibrary {
         return true;
     }
 
+    /**
+     * 重置收款地址
+     * @return
+     */
     public static String resetAddress() {
         String address = ElastosWallet.getAddress(Utilty.getPreference(Constants.SP_KEY_DID_PUBLICKEY, ""));
         if (TextUtils.isEmpty(address)) return null;

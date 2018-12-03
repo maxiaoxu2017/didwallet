@@ -54,11 +54,14 @@
         <activity android:name=".activity.WordShowActivity" />
         <activity android:name=".activity.WordInputActivity" />
         <activity android:name=".activity.ImportWalletActivity" />
-        <activity android:name=".activity.ReChargeActivity" />
+        <activity android:name=".activity.ReChargeActivity"
+            android:process=":didservice"/>
         <activity android:name=".activity.WithDrawActivity" />
         <activity android:name=".activity.LanguageActivity" />
-        <activity android:name=".activity.PersonalActivity" />
-        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.PersonalActivity"
+            android:process=":didservice"/>
+        <activity android:name=".activity.HomeActivity"
+            android:process=":didservice"/>
         <activity android:name=".activity.ReceiveActivity" />
         <activity android:name=".activity.SendActivity" />
         <activity android:name=".activity.RecordsActivity"></activity>

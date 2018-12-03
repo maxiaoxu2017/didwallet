@@ -40,7 +40,8 @@ public class DemoActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
         switch (id) {
             case R.id.btn1:
-                DidLibrary.testChongzhi();
+                String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
+                DidLibrary.Chongzhi(fromAddress, "1");
                 break;
             case R.id.btn2:
                 DidLibrary.testTixian();

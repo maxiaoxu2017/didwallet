@@ -85,7 +85,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/textBlack"
                 android:textSize="16sp"
-                android:text="@string/home_expense"/>
+                android:text="@string/home_didinfo"/>
             <View
                 android:background="@color/bgGray"
                 android:layout_width="1dp"
@@ -99,7 +99,8 @@
                 android:textAllCaps="false"
                 android:textColor="@color/textBlack"
                 android:textSize="16sp"
-                android:text="@string/home_income"/>
+                android:text="@string/home_income"
+                android:visibility="gone"/>
         </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_home"

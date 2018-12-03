@@ -47,7 +47,7 @@ public class WithDrawActivity extends BaseActivity {
     }
 
     public void onOKClick(View view) {
-
+        //todo:
     }
 
     @Override
