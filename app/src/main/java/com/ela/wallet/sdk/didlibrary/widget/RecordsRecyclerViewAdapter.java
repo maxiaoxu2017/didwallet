@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.bean.RecordsModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RecordsRecyclerViewAdapter extends RecyclerView.Adapter<RecordsRecyclerViewAdapter.RecordsViewHolder> {
@@ -47,8 +49,21 @@ public class RecordsRecyclerViewAdapter extends RecyclerView.Adapter<RecordsRecy
     @Override
     public void onBindViewHolder(final RecordsRecyclerViewAdapter.RecordsViewHolder holder, final int position) {
         holder.tv_title.setText(mList.get(position).getType());
-        holder.tv_subtitle.setText(mList.get(position).getTime());
-        holder.tv_next.setText(mList.get(position).getValue());
+        holder.tv_subtitle.setText(stampToDate(mList.get(position).getTime()));
+        holder.tv_next.setText(mList.get(position).getType().equals("income") ? "+ " : "- " +
+                Float.parseFloat(mList.get(position).getValue())/100000000.0f + " ELA");
+    }
+
+    /*
+    * 将时间戳转换为时间
+    */
+    private String stampToDate(String s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        long lt = new Long(s);
+        Date date = new Date(lt);
+        res = simpleDateFormat.format(date);
+        return res;
     }
 
     @Override
