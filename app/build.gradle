@@ -36,7 +36,6 @@ dependencies {
     implementation(name: 'QrCodeScannerView-Android-1.1.2', ext: 'aar')
     implementation(name: 'Elastos.ORG.Wallet.Lib-v0.1.2', ext: 'aar')
     implementation(name: 'customdialog', ext: 'aar')
-//    compile (name: 'nanohttpd-2.2.0', ext: 'jar')
 
 
     configurations.all {

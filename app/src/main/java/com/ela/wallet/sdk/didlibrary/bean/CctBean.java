@@ -10,7 +10,7 @@ import java.util.List;
 public class CctBean {
 
     /**
-     * result : {"Transactions":[{"UTXOInputs":[{"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4","txid":"583ca6c3780b3ba880b446c7ce5427e538a82fc185e54749e61805a97dc3b222","index":0}],"CrossChainAsset":[{"amount":100000000,"address":"EgRJA3p9amexkWJMsYkSSn576n6oRteKEP"}],"Fee":20000,"Outputs":[{"amount":100010000,"address":"XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ"},{"amount":9899980000,"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4"}]}]}
+     * result : {"Transactions":[{"UTXOInputs":[{"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4","txid":"5b9f3a003dd2898bc8b1485ba17519e3d53ee2d10f99897cabcf443d3543b55e","index":1,"privateKey":"840d6c631e3d612aa624dae2d7f6d354e58135a7a6cb16ed6dd264b7d104aae7"}],"CrossChainAsset":[{"amount":100000000,"address":"EeEfKiN9tVtqFCJxHGuRj93CKywDBCxJat"}],"Fee":20000,"Outputs":[{"amount":100010000,"address":"XWr5fdmvTju7Br6i6SM2x9tK3R2U3WaXXT"},{"amount":9799960000,"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4"}]}]}
      * status : 200
      */
 
@@ -46,13 +46,14 @@ public class CctBean {
 
         public static class TransactionsBean {
             /**
-             * UTXOInputs : [{"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4","txid":"583ca6c3780b3ba880b446c7ce5427e538a82fc185e54749e61805a97dc3b222","index":0}]
-             * CrossChainAsset : [{"amount":100000000,"address":"EgRJA3p9amexkWJMsYkSSn576n6oRteKEP"}]
+             * UTXOInputs : [{"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4","txid":"5b9f3a003dd2898bc8b1485ba17519e3d53ee2d10f99897cabcf443d3543b55e","index":1,"privateKey":"840d6c631e3d612aa624dae2d7f6d354e58135a7a6cb16ed6dd264b7d104aae7"}]
+             * CrossChainAsset : [{"amount":100000000,"address":"EeEfKiN9tVtqFCJxHGuRj93CKywDBCxJat"}]
              * Fee : 20000
-             * Outputs : [{"amount":100010000,"address":"XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ"},{"amount":9899980000,"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4"}]
+             * Outputs : [{"amount":100010000,"address":"XWr5fdmvTju7Br6i6SM2x9tK3R2U3WaXXT"},{"amount":9799960000,"address":"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4"}]
              */
 
             private int Fee;
+            private String Memo;
             private List<UTXOInputsBean> UTXOInputs;
             private List<CrossChainAssetBean> CrossChainAsset;
             private List<OutputsBean> Outputs;
@@ -63,6 +64,14 @@ public class CctBean {
 
             public void setFee(int Fee) {
                 this.Fee = Fee;
+            }
+
+            public String getMemo() {
+                return Memo;
+            }
+
+            public void setMemo(String memo) {
+                Memo = memo;
             }
 
             public List<UTXOInputsBean> getUTXOInputs() {
@@ -92,13 +101,15 @@ public class CctBean {
             public static class UTXOInputsBean {
                 /**
                  * address : ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4
-                 * txid : 583ca6c3780b3ba880b446c7ce5427e538a82fc185e54749e61805a97dc3b222
-                 * index : 0
+                 * txid : 5b9f3a003dd2898bc8b1485ba17519e3d53ee2d10f99897cabcf443d3543b55e
+                 * index : 1
+                 * privateKey : 840d6c631e3d612aa624dae2d7f6d354e58135a7a6cb16ed6dd264b7d104aae7
                  */
 
                 private String address;
                 private String txid;
                 private int index;
+                private String privateKey;
 
                 public String getAddress() {
                     return address;
@@ -123,18 +134,26 @@ public class CctBean {
                 public void setIndex(int index) {
                     this.index = index;
                 }
+
+                public String getPrivateKey() {
+                    return privateKey;
+                }
+
+                public void setPrivateKey(String privateKey) {
+                    this.privateKey = privateKey;
+                }
             }
 
             public static class CrossChainAssetBean {
                 /**
                  * amount : 100000000
-                 * address : EgRJA3p9amexkWJMsYkSSn576n6oRteKEP
+                 * address : EeEfKiN9tVtqFCJxHGuRj93CKywDBCxJat
                  */
 
-                private int amount;
+                private long amount;
                 private String address;
 
-                public int getAmount() {
+                public long getAmount() {
                     return amount;
                 }
 
@@ -154,13 +173,13 @@ public class CctBean {
             public static class OutputsBean {
                 /**
                  * amount : 100010000
-                 * address : XKUh4GLhFJiqAMTF6HyWQrV9pK9HcGUdfJ
+                 * address : XWr5fdmvTju7Br6i6SM2x9tK3R2U3WaXXT
                  */
 
-                private int amount;
+                private long amount;
                 private String address;
 
-                public int getAmount() {
+                public long getAmount() {
                     return amount;
                 }
 

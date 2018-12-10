@@ -7,7 +7,7 @@
     <string name="nav_all">All</string>
 
     <string name="home_wallet">wallet</string>
-    <string name="home_wallet_name">Personal Wallet</string>
+    <string name="home_wallet_name">My DID Address</string>
     <string name="home_balance">Walletbalance</string>
     <string name="home_expense">expense</string>
     <string name="home_income">income</string>
@@ -25,15 +25,20 @@
     <string name="send_creating">Creating transaction</string>
     <string name="send_click">Click to send</string>
 
+    <string name="finance_recharge_addresss">recharge from</string>
+    <string name="finance_recharge_phrase">the phrase of recharge account</string>
+    <string name="finance_withdraw_addresss">withdraw to</string>
+
     <string name="me_recharge">Recharge</string>
     <string name="me_withdraw">withdraw</string>
-    <string name="me_records">records</string>
+    <string name="me_records">Records</string>
+    <string name="me_finance">Finance</string>
     <string name="me_history">Recharge and withdraw record</string>
     <string name="me_preference">preference</string>
-    <string name="me_preference_language">language</string>
+    <string name="me_preference_language">Language</string>
     <string name="me_preference_language_select_english">ENGLISH</string>
     <string name="me_preference_language_select_chinese">中文</string>
-    <string name="me_preference_wallet">Wallet Switch</string>
+    <string name="me_preference_wallet">Switch Account</string>
 
     <string name="word_issafe">Is your environment safe to use?</string>
     <string name="word_besafe">Please make sure there is no security issue in the surrounding environment</string>

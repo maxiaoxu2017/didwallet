@@ -51,20 +51,28 @@
         <activity
             android:name=".activity.BackupTipsActivity"
             android:process=":didservice" />
-        <activity android:name=".activity.WordShowActivity" />
-        <activity android:name=".activity.WordInputActivity" />
-        <activity android:name=".activity.ImportWalletActivity" />
+        <activity android:name=".activity.WordShowActivity"
+            android:process=":didservice" />
+        <activity android:name=".activity.WordInputActivity"
+            android:process=":didservice" />
+        <activity android:name=".activity.ImportWalletActivity"
+            android:process=":didservice" />
         <activity android:name=".activity.ReChargeActivity"
-            android:process=":didservice"/>
-        <activity android:name=".activity.WithDrawActivity" />
-        <activity android:name=".activity.LanguageActivity" />
+            android:process=":didservice" />
+        <activity android:name=".activity.WithDrawActivity"
+            android:process=":didservice" />
+        <activity android:name=".activity.LanguageActivity"
+            android:process=":didservice" />
         <activity android:name=".activity.PersonalActivity"
-            android:process=":didservice"/>
+            android:process=":didservice" />
         <activity android:name=".activity.HomeActivity"
-            android:process=":didservice"/>
-        <activity android:name=".activity.ReceiveActivity" />
-        <activity android:name=".activity.SendActivity" />
-        <activity android:name=".activity.RecordsActivity"></activity>
+            android:process=":didservice" />
+        <activity android:name=".activity.ReceiveActivity"
+            android:process=":didservice" />
+        <activity android:name=".activity.SendActivity"
+            android:process=":didservice" />
+        <activity android:name=".activity.RecordsActivity"
+            android:process=":didservice" ></activity>
     </application>
 
 </manifest>

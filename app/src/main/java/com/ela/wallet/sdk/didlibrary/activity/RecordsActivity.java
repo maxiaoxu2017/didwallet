@@ -50,11 +50,11 @@ public class RecordsActivity extends BaseActivity {
         mList2 = new ArrayList<>();
         mList3 = new ArrayList<>();
         mList4 = new ArrayList<>();
-        //todo:
-        mList.add(new RecordsModel(tabs[1], "20/11/2018", "+1.5 ELA"));
-        mList.add(new RecordsModel(tabs[2], "20/11/2018", "-0.5 ELA"));
-        mList.add(new RecordsModel(tabs[3], "15/11/2018", "+2 ELA"));
-        mList.add(new RecordsModel(tabs[4], "21/11/2018", "-1 ELA"));
+//        //todo:
+//        mList.add(new RecordsModel(tabs[1], "20/11/2018", "+1.5 ELA"));
+//        mList.add(new RecordsModel(tabs[2], "20/11/2018", "-0.5 ELA"));
+//        mList.add(new RecordsModel(tabs[3], "15/11/2018", "+2 ELA"));
+//        mList.add(new RecordsModel(tabs[4], "21/11/2018", "-1 ELA"));
         for(RecordsModel records : mList) {
             if (tabs[1].equals(records.getType())) {
                 mList1.add(records);

@@ -105,7 +105,7 @@ public class HttpRequest {
 					DataOutputStream out = new DataOutputStream(connection.getOutputStream());
 					out.writeBytes(data);
 
-					LogUtil.d("[http]...sendRequestWithHttpURLConnection..." + connection.getResponseCode());
+//					LogUtil.d("[http]...sendRequestWithHttpURLConnection..." + connection.getResponseCode());
 					InputStream inputStream = connection.getInputStream();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 					StringBuilder response = new StringBuilder();

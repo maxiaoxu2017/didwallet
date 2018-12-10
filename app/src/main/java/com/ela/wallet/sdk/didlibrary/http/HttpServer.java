@@ -1,17 +1,16 @@
 package com.ela.wallet.sdk.didlibrary.http;
 
-import android.os.Process;
 import android.text.TextUtils;
 
-import com.ela.wallet.sdk.didlibrary.R;
-import com.ela.wallet.sdk.didlibrary.bean.BalanceBean;
+import com.ela.wallet.sdk.didlibrary.callback.TransCallback;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
 import com.ela.wallet.sdk.didlibrary.global.Urls;
 import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
-import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
-import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -49,76 +48,91 @@ public class HttpServer extends NanoHTTPD {
         super(port);
     }
 
+    private Response getReturnData(String data) {
+        Response response = newFixedLengthResponse(Response.Status.OK, "application/json", data);
+        response.addHeader("Access-Control-Allow-Headers",  "x-requested-with, Content-Type, content-type");
+        response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, HEAD");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        response.addHeader("Access-Control-Allow-Origin", "*");
+        response.addHeader("Access-Control-Max-Age", "" + 42 * 60 * 60);
+        return response;
+    }
+
     @Override
     public Response serve(IHTTPSession session) {
-        LogUtil.w("httpd serve:");
+        LogUtil.d("httpd serve:");
         if (Method.POST.equals(session.getMethod())) {
-            Map<String, String> files = new HashMap<String, String>();
+            Map<String, String> files = new HashMap<>();
             Map<String, String> header = session.getHeaders();
             try {
                 session.parseBody(files);
-                String body = session.getQueryParameterString();
+                String param = files.get("postData");
                 LogUtil.d("header : " + header);
-                LogUtil.d("body : " + body);
+                LogUtil.d("body : " + param);
                 header.get("http-client-ip");
+
+                String uri = session.getUri();
+                LogUtil.d("uri=" + uri);
+                if (uri.startsWith("/api/v1/sendTransfer")) {
+                    String transferData = dealWithZhuanzhang(param);
+                    return getReturnData(transferData);
+                } else if (uri.startsWith("/api/v1/setDidInfo")) {
+                    String didinfo = dealWithSetDid(param);
+                    return getReturnData(didinfo);
+                } else {
+
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ResponseException e) {
                 e.printStackTrace();
             }
-            return newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "text/html", "HelloWorld");
-        }else {
+            String data = String.format("{\"status\":\"400\",\"result\":\"bad request\"}");
+            return getReturnData(data);
+        }else if (Method.GET.equals(session.getMethod())){
             String uri = session.getUri();
             LogUtil.d("uri=" + uri);
             String params = session.getQueryParameterString();
             LogUtil.d("params=" + params);
-            if (uri.startsWith("/api/v1/getDid")) {
+            if (uri.equals("/api/v1/getDid")) {
                 String did = Utilty.getPreference(Constants.SP_KEY_DID, "");
                 if (TextUtils.isEmpty(did)) {
-                    return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"500\",\"result\":\"internal error\"}"));
+                    String data = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+                    return getReturnData(data);
                 } else {
-                    return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"200\",\"result\":\"%s\"}", did));
+                    String data = String.format("{\"status\":\"200\",\"result\":\"%s\"}", did);
+                    return getReturnData(data);
                 }
             } else if (uri.startsWith("/api/v1/getAddress")) {
                 String candyAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
                 if (TextUtils.isEmpty(candyAddress)) {
-                    return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"500\",\"result\":\"internal error\"}"));
+                    String data = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+                    return getReturnData(data);
                 } else {
-                    return newFixedLengthResponse(Response.Status.OK, "application/json", String.format("{\"status\":\"200\",\"result\":\"%s\"}", candyAddress));
+                    String data = String.format("{\"status\":\"200\",\"result\":\"%s\"}", candyAddress);
+                    return getReturnData(data);
                 }
             } else if (uri.contains("/api/v1/getBalance")) {
                 String balance = dealWithBalance();
-                return newFixedLengthResponse(Response.Status.OK, "application/json", balance);
-            } else if (uri.startsWith("/api/v1/sendTransfer")) {
-                String result = null;
-                int type = 1;
-                switch (type) {
-                    case 1:
-                        result = dealWithChongzhi();
-                        break;
-                    case 2:
-                        result = dealWithTiXian();
-                        break;
-                    case 3:
-                        result = dealWithZhuanzhang();
-                        break;
-                    case 4:
-                        result = dealWithShoukuan();
-                }
-                return newFixedLengthResponse(Response.Status.OK, "application/json", result);
+                return getReturnData(balance);
             } else if (uri.startsWith("/api/v1/getTxById")) {
                 String trans = dealWithGetTx(params);
-                return newFixedLengthResponse(Response.Status.OK, "application/json", trans);
+                return getReturnData(trans);
             } else if (uri.startsWith("/api/v1/getAllTxs")) {
                 String allTxs = dealWithAllTxs(params);
-                return newFixedLengthResponse(Response.Status.OK, "application/json", allTxs);
-            } else if (uri.startsWith("/api/v1/setDidInfo")) {
-
-            } else if (uri.startsWith("/api/v1/getDidInfo")) {
-
+                return getReturnData(allTxs);
+            } else if (uri.equals("/api/v1/getDidInfo")) {
+                String didinfo = dealWithGetDid();
+                return getReturnData(didinfo);
             }
 
-            return newFixedLengthResponse(Response.Status.OK, "application/json", "{\"status\":\"200\"}");
+            String data = String.format("{\"status\":\"400\",\"result\":\"bad request\"}");
+            return getReturnData(data);
+        } else {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("status", "400");
+            jsonObject.addProperty("result", "method don't support");
+            return getReturnData(jsonObject.toString());
         }
     }
 
@@ -139,7 +153,8 @@ public class HttpServer extends NanoHTTPD {
 
             @Override
             public void onError(Exception e) {
-
+                txResult = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+                countDownLatch.countDown();
             }
         });
         try {
@@ -161,7 +176,7 @@ public class HttpServer extends NanoHTTPD {
         LogUtil.d("dealWithGetTx:params=" + params);
         String txId = params.substring(5);
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        String url = String.format("%s%s%s", Urls.SERVER_WALLET, Urls.ELA_TX, txId);
+        String url = String.format("%s%s%s", Urls.SERVER_DID, Urls.DID_TX, txId);
         HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
@@ -171,7 +186,8 @@ public class HttpServer extends NanoHTTPD {
 
             @Override
             public void onError(Exception e) {
-
+                txResult = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+                countDownLatch.countDown();
             }
         });
         try {
@@ -190,45 +206,35 @@ public class HttpServer extends NanoHTTPD {
      */
     private String allTxs;
     private String dealWithAllTxs(String params) {
-        params = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
+        String address = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
+        String url = String.format("%s%s%s", Urls.SERVER_DID_HISTORY, Urls.DID_HISTORY, address);
+        if (!TextUtils.isEmpty(params) && params.contains("&")) {
+            url = String.format("%s%s%s?%s", Urls.SERVER_DID_HISTORY, Urls.DID_HISTORY, address, params);
+        }
         final CountDownLatch countDownLatch = new CountDownLatch(1);
-        String url = String.format("%s%s%s", Urls.SERVER_DID_HISTORY, Urls.DID_HISTORY, params);
         HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(String response) {
                 allTxs = response;
-                try {
-                    countDownLatch.await(30, TimeUnit.SECONDS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                countDownLatch.countDown();
             }
 
             @Override
             public void onError(Exception e) {
-
+                allTxs = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+                countDownLatch.countDown();
             }
         });
+        try {
+            countDownLatch.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return allTxs;
     }
 
 
     private String dealWithChongzhi() {
-        String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
-        DidLibrary.Chongzhi(fromAddress, "1");
-
-        String cctUrl = String.format("%s%s%s", Urls.SERVER_WALLET, Urls.ELA_CCT, "");
-        HttpRequest.sendRequestWithHttpURLConnection(cctUrl, new HttpRequest.HttpCallbackListener() {
-            @Override
-            public void onFinish(String response) {
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-
-            }
-        });
         return "";
     }
 
@@ -236,11 +242,73 @@ public class HttpServer extends NanoHTTPD {
         return "";
     }
 
-    private String dealWithZhuanzhang() {
-        return "";
+    private String zhuanzhangData = String.format("{\"status\":\"500\",\"result\":\"internal error\"}");
+    private String dealWithZhuanzhang(String param) {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        try {
+            JSONObject js = new JSONObject(param);
+            String toAddress = js.optString("toAddress");
+            long amount = js.optLong("amount");
+            String memo = js.optString("memo");
+            String info = js.optString("info");
+            if (!TextUtils.isEmpty(toAddress) && amount >= 0) {
+                DidLibrary.Zhuanzhang(toAddress, amount, new TransCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        zhuanzhangData = result;
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onFailed(String result) {
+                        zhuanzhangData = result;
+                        countDownLatch.countDown();
+                    }
+                });
+                countDownLatch.await(30, TimeUnit.SECONDS);
+            } else {
+                zhuanzhangData = String.format("{\"status\":\"10001\",\"result\":\"param error\"}");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return zhuanzhangData;
     }
 
     private String dealWithShoukuan() {
         return "";
+    }
+
+    private String didInfo;
+    private String dealWithSetDid(String memo) {
+        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        try {
+            if (!TextUtils.isEmpty(memo)) {
+                DidLibrary.setDidInfo(memo, new TransCallback() {
+                    @Override
+                    public void onSuccess(String result) {
+                        didInfo = result;
+                        countDownLatch.countDown();
+                    }
+
+                    @Override
+                    public void onFailed(String result) {
+                        didInfo = result;
+                        countDownLatch.countDown();
+                    }
+                });
+                countDownLatch.await(30, TimeUnit.SECONDS);
+            } else {
+                didInfo = String.format("{\"status\":\"10001\",\"result\":\"param error\"}");
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return didInfo;
+    }
+
+    private String dealWithGetDid() {
+        String didInfo = Utilty.getPreference(Constants.SP_KEY_DID_INFO, "");
+        return String.format("{\"status\":\"200\",\"result\":\"%s\"}", didInfo);
     }
 }

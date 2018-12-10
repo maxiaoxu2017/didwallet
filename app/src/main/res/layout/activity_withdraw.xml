@@ -25,13 +25,16 @@
             android:textSize="16sp"
             android:text="@string/me_withdraw"/>
         <EditText
+            android:id="@+id/et_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
             android:layout_below="@id/tv_title"
-            android:background="@drawable/bg_roundcorner_white"
-            android:textSize="16sp"
-            android:hint="              ELA"/>
-        
+            android:background="@color/bgGray"
+            android:textSize="14sp"
+            android:hint="SELA(1 ELA = 100000000 SELA)"/>
+
+
     </RelativeLayout>
 
     <LinearLayout

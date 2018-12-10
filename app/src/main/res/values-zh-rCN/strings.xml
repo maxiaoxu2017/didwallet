@@ -7,7 +7,7 @@
     <string name="nav_all">全部</string>
 
     <string name="home_wallet">钱包</string>
-    <string name="home_wallet_name">个人钱包</string>
+    <string name="home_wallet_name">我的DID账户</string>
     <string name="home_balance">钱包余额</string>
     <string name="home_expense">支出</string>
     <string name="home_income">收入</string>
@@ -25,15 +25,20 @@
     <string name="send_creating">正在创建交易</string>
     <string name="send_click">点击发送</string>
 
+    <string name="finance_recharge_addresss">充值来源</string>
+    <string name="finance_recharge_phrase">充值来源账户的助记词（恢复短语）</string>
+    <string name="finance_withdraw_addresss">提现到</string>
+
     <string name="me_recharge">充值</string>
     <string name="me_withdraw">提现</string>
-    <string name="me_records">交易记录</string>
+    <string name="me_records">数据记录</string>
+    <string name="me_finance">金融数据</string>
     <string name="me_history">充值和提现记录</string>
     <string name="me_preference">偏好设置</string>
     <string name="me_preference_language">语言</string>
     <string name="me_preference_language_select_english">ENGLISH</string>
     <string name="me_preference_language_select_chinese">中文</string>
-    <string name="me_preference_wallet">切换钱包</string>
+    <string name="me_preference_wallet">切换账户</string>
 
 
     <string name="word_issafe">您的使用环境安全吗</string>

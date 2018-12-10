@@ -9,6 +9,33 @@
     <include
         layout="@layout/nav_title"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="136dp"
+        android:background="@android:color/white" >
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginBottom="18dp"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/textBlack"
+            android:textSize="16sp"
+            android:text="@string/nav_pay"/>
+        <EditText
+            android:id="@+id/et_amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:layout_below="@id/tv_title"
+            android:background="@color/bgGray"
+            android:textSize="14sp"
+            android:hint="SELA(1 ELA = 100000000 SELA)"/>
+
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="128dp"
@@ -45,5 +72,16 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="53dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_roundcorner_blue"
+        android:textColor="@android:color/white"
+        android:text="@string/btn_ok"
+        android:onClick="onOKClick"/>
 
 </LinearLayout>

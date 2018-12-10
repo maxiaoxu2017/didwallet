@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.ela.wallet.sdk.didlibrary.http.HttpServer;
+import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class DidService extends Service {
     public void onCreate() {
         super.onCreate();
         Utilty.setServiceContext(this);
+        DidLibrary.init(this);
     }
 
     @Override

@@ -41,16 +41,16 @@ public class DemoActivity extends AppCompatActivity implements View.OnClickListe
         switch (id) {
             case R.id.btn1:
                 String fromAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
-                DidLibrary.Chongzhi(fromAddress, "1");
-                break;
-            case R.id.btn2:
-                DidLibrary.testTixian();
-                break;
-            case R.id.btn3:
-                DidLibrary.testZhuanzhang();
-                break;
-            case R.id.btn4:
-                DidLibrary.testSHoukuan();
+//                DidLibrary.Chongzhi(fromAddress, 100000000);
+//                break;
+//            case R.id.btn2:
+//                DidLibrary.testTixian();
+//                break;
+//            case R.id.btn3:
+//                DidLibrary.testZhuanzhang();
+//                break;
+//            case R.id.btn4:
+//                DidLibrary.testSHoukuan();
                 break;
         }
     }

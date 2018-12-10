@@ -1,5 +1,8 @@
 package com.ela.wallet.sdk.didlibrary.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +43,8 @@ public class ReceiveActivity extends BaseActivity {
         tv_copy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setPrimaryClip(ClipData.newPlainText("did", Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "")));
                 Toast.makeText(ReceiveActivity.this, "copy success", Toast.LENGTH_SHORT).show();
             }
         });
@@ -78,7 +83,6 @@ public class ReceiveActivity extends BaseActivity {
     }
 
     private void loadBalanceData() {
-        //todo : change to really address
         String url = String.format("%s%s%s", Urls.SERVER_DID, Urls.DID_BALANCE, Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""));
         HttpRequest.sendRequestWithHttpURLConnection(url, new HttpRequest.HttpCallbackListener() {
             @Override

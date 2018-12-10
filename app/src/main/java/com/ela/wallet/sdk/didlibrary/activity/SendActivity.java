@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.ela.wallet.sdk.didlibrary.R;
 import com.ela.wallet.sdk.didlibrary.base.BaseActivity;
+import com.ela.wallet.sdk.didlibrary.callback.TransCallback;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
+import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 import com.ela.wallet.sdk.didlibrary.utils.Utilty;
 import com.ela.wallet.sdk.didlibrary.widget.DidAlertDialog;
@@ -23,10 +27,13 @@ public class SendActivity extends BaseActivity {
     private EditText et_scan_address;
     private ImageView iv_scan;
 
+    private EditText et_amount;
+
     @Override
     protected void initView() {
         et_scan_address = findViewById(R.id.et_scan_address);
         iv_scan = findViewById(R.id.iv_scan);
+        et_amount = findViewById(R.id.et_amount);
 
         iv_scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +66,42 @@ public class SendActivity extends BaseActivity {
             et_scan_address.setText(result);
         }
     }
+
+    public void onOKClick(View view) {
+        String toAddress = et_scan_address.getText().toString();
+        String amount = et_amount.getText().toString();
+        if (TextUtils.isEmpty(toAddress) || TextUtils.isEmpty(amount)) {
+            Toast.makeText(SendActivity.this, "params invalid", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        DidLibrary.Tixian(toAddress, Long.parseLong(amount), new TransCallback() {
+            @Override
+            public void onSuccess(final String result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SendActivity.this, result, Toast.LENGTH_SHORT).show();
+                        new DidAlertDialog(SendActivity.this)
+                                .setTitle("操作成功")
+                                .setRightButton(getString(R.string.btn_ok), null)
+                                .show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(final String result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SendActivity.this, result, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+
 
     private void showBackupDialog() {
         new DidAlertDialog(this)

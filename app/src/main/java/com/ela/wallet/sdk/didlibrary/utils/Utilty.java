@@ -26,6 +26,7 @@ public class Utilty {
 
     public static Context getContext() {
         return sContext == null ? mContext : sContext;
+//        return mContext;
     }
 
     public static boolean setPreference(String key, String value) {

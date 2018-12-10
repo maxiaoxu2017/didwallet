@@ -11,10 +11,14 @@ import android.widget.Toast;
 
 import com.ela.wallet.sdk.didlibrary.activity.DidLaunchActivity;
 import com.ela.wallet.sdk.didlibrary.activity.HomeActivity;
+import com.ela.wallet.sdk.didlibrary.bean.CctBean;
+import com.ela.wallet.sdk.didlibrary.bean.HttpBean;
+import com.ela.wallet.sdk.didlibrary.callback.TransCallback;
 import com.ela.wallet.sdk.didlibrary.global.Constants;
 import com.ela.wallet.sdk.didlibrary.global.Urls;
 import com.ela.wallet.sdk.didlibrary.http.HttpRequest;
 import com.ela.wallet.sdk.didlibrary.service.DidService;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -25,7 +29,10 @@ import org.elastos.wallet.lib.ElastosWalletSign;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
+
+import javax.security.auth.callback.Callback;
 
 public class DidLibrary {
 
@@ -45,26 +52,17 @@ public class DidLibrary {
         LogUtil.d("init");
         Utilty.setContext(context);
         mContext = context;
-        Intent intent = new Intent();
-        intent.setClass(context, DidService.class);
-        context.startService(intent);
         if (!"true".equals(Utilty.getPreference(Constants.SP_KEY_DID_ISBACKUP, "false")) &&
                 TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID_MNEMONIC, ""))) {
             GenrateMnemonic();
+        } else {
+            loadLibrary();
+            mPrivateKey = Utilty.getPreference(Constants.SP_KEY_DID_PRIVATEKEY, "");
         }
         if (TextUtils.isEmpty(Utilty.getPreference(Constants.SP_KEY_DID, ""))) {
             Did();
         }
         return "init success";
-    }
-
-    public static void launch(Context context) {
-        Intent intent = new Intent();
-        if (context instanceof Application) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        intent.setClass(context, HomeActivity.class);
-        context.startActivity(intent);
     }
 
     private static String GenrateMnemonic() {
@@ -73,6 +71,11 @@ public class DidLibrary {
         String language = "";
         String words = "";
         String sp_lang = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
+        if (TextUtils.isEmpty(sp_lang)) {
+            if (Locale.getDefault().getLanguage().contains("zh")) {
+                sp_lang = "chinese";
+            }
+        }
         if ("chinese".equals(sp_lang)) {
             language = "chinese";
             words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
@@ -161,6 +164,17 @@ public class DidLibrary {
         return message;
     }
 
+    private static void loadLibrary() {
+        ElastosWallet.Data data = new ElastosWallet.Data();
+        data.buf = new byte[]{0, 1, 2, 3, 4, 5};
+        ElastosWallet.Data signedData = new ElastosWallet.Data();
+        int signedLen = ElastosWallet.sign(Utilty.getPreference(Constants.SP_KEY_DID_PRIVATEKEY, ""), data, data.buf.length, signedData);
+        if (signedLen <= 0) {
+            String errmsg = "Failed to sign data.\n";
+            LogUtil.e(errmsg);
+        }
+    }
+
 
     private String HDWalletAddress() {
         String message = "";
@@ -221,80 +235,94 @@ public class DidLibrary {
         return message;
     }
 
+    public static void Chongzhi(String address, long amount, String mnemonic) {
+        Chongzhi(address, amount, mnemonic,null);
+    }
+
     /**
      * 充值 ELA-DID
      */
-    public static void Chongzhi(String address, String amount) {
+    public static void Chongzhi(String address, long amount, final String mnemonic, final TransCallback callback) {
+        //充值来源ELA链地址
         String fromAddress = address;
         String toAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
-        String param = String.format("  {\"inputs\":[\"ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":100000000}]}", toAddress);
+        String param = String.format("  {\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":%d}]}", fromAddress, toAddress, amount);
         LogUtil.d("chongzhi param=" + param);
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_CCT, param, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
                 LogUtil.d("chongzhi response=" + response);
-                String signed = testSignTxData();
+                String signed = parseChongzhiData(response, mnemonic);
                 LogUtil.d("chongzhi signed data=" + signed);
+                if (TextUtils.isEmpty(signed)) {
+                    return;
+                }
                 String signdparam = String.format("{\"data\":\"%s\"}", signed);
                 LogUtil.d("chongzhi srt data=" + signdparam);
                 HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_WALLET + Urls.ELA_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                     @Override
                     public void onFinish(final String response) {
                         LogUtil.d("chongzhi srt result:" + response);
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
                     }
 
                     @Override
                     public void onError(Exception e) {
-
+                        if (callback != null) {
+                            callback.onFailed(e.getMessage());
+                        }
                     }
                 });
             }
 
             @Override
             public void onError(Exception e) {
-
+                if (callback != null) {
+                    callback.onFailed(e.getMessage());
+                }
             }
         });
 
 
     }
 
+    public static void Tixian(String address, long amount) {
+        Tixian(address, amount, null);
+    }
+
     /**
      * 提现 DID-ELA
      */
-    public static void testTixian() {
-        String toAddress = "ESs1jakyQjxBvEgwqEGxtceastbPAR1UJ4";
+    public static void Tixian(String toAddress, long amount, final TransCallback callback) {
         String fromAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
-        String param = String.format("  {\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":10}]}", fromAddress, toAddress);
+        String param = String.format("{\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\",\"amt\":%d}]}", fromAddress, toAddress, amount);
 
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_CCT, param, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
-                ((Activity) mContext).runOnUiThread(new Runnable() {
+                LogUtil.d("tixian response=" + response);
+                String signed = parseTixianData(response);
+                if (TextUtils.isEmpty(signed)) {
+                    return;
+                }
+                String signdparam = String.format("{\"data\":\"%s\"}", signed);
+                LogUtil.d("signdparam data=" + signdparam);
+                HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                     @Override
-                    public void run() {
-                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = getSignedData(response);
-                        LogUtil.d("signed data=" + signed);
-                        String signdparam = String.format("{\"data\":\"%s\"}", signed);
-                        LogUtil.d("signdparam data=" + signdparam);
-                        HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
-                            @Override
-                            public void onFinish(final String response) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LogUtil.d("tixian result:" + response);
-                                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                    public void onFinish(final String response) {
+                        LogUtil.d("tixian result:" + response);
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
-
-                            }
-                        });
+                    @Override
+                    public void onError(Exception e) {
+                        if (callback != null) {
+                            callback.onFailed(e.getMessage());
+                        }
                     }
                 });
                 LogUtil.d("response=" + response);
@@ -302,111 +330,100 @@ public class DidLibrary {
 
             @Override
             public void onError(Exception e) {
-
+                if (callback != null) {
+                    callback.onFailed(e.getMessage());
+                }
             }
         });
+    }
+
+    public static void Zhuanzhang(String toAddress, long amount) {
+        Zhuanzhang(toAddress, amount, null);
     }
 
     /**
      * 转账 DID-DID
      */
-    public static void testZhuanzhang() {
-        String fromAddress = "EYegRY3DQPUrD8igKzCaH19ZZAYN3DTeNF";
-        String toAddress = "EMXabt61cDgaCXuFvx4NSvKt2t33JJqTxT";
+    public static void Zhuanzhang(String toAddress, long amount, final TransCallback callback) {
+        String fromAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
 
-
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        arrayList.add("EU3e23CtozdSvrtPzk9A1FeC9iGD896DdV");
-//        JsonObject param = new JsonObject();
-//        param.addProperty("inputs", arrayList.add(""));
-//        param.addProperty("outputs", "[{\"addr\": \"EPzxJrHefvE7TCWmEGQ4rcFgxGeGBZFSHw\",\"amt\": 1000}]");
-//        LogUtil.d("param:" + param.toString());
-        String param = " {\"inputs\":[\"EYegRY3DQPUrD8igKzCaH19ZZAYN3DTeNF\"],\"outputs\":[{\"addr\":\"EMXabt61cDgaCXuFvx4NSvKt2t33JJqTxT\", \"amt\" :1000}]}";
+        String param = String.format("{\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\", \"amt\":%d}]}", fromAddress, toAddress, amount);
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_CTX, param, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
                 LogUtil.d("response:" + response);
-                ((Activity) mContext).runOnUiThread(new Runnable() {
+                HttpBean ctxBean = new Gson().fromJson(response, HttpBean.class);
+                if (ctxBean.getStatus() != 200 && callback != null) {
+                    callback.onFailed(response);
+                    return;
+                }
+                String signed = parseZhuanzhangData(response);
+                if (TextUtils.isEmpty(signed)) {
+                    if (callback != null) {
+                        callback.onFailed(response);
+                    }
+                    return;
+                }
+                LogUtil.d("signed data=" + signed);
+                String signdparam = String.format("{\"data\":\"%s\"}", signed);
+                LogUtil.d("signdparam data=" + signdparam);
+                HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                     @Override
-                    public void run() {
-                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = getSignedData(response);
-                        LogUtil.d("signed data=" + signed);
-                        String signdparam = String.format("{\"data\":\"%s\"}", signed);
-                        LogUtil.d("signdparam data=" + signdparam);
-                        HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
-                            @Override
-                            public void onFinish(final String response) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LogUtil.d("zhuanzhang result:" + response);
-                                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                    public void onFinish(final String response) {
+                        LogUtil.d("zhuanzhang result:" + response);
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
-
-                            }
-                        });
+                    @Override
+                    public void onError(Exception e) {
+                        if (callback != null) {
+                            callback.onFailed(e.getMessage());
+                        }
                     }
                 });
+
             }
 
             @Override
             public void onError(Exception e) {
-
+                if (callback != null) {
+                    callback.onFailed(e.getMessage());
+                }
             }
         });
 
     }
 
+    public static void Shoukuan(String fromAddress, long amount) {
+        Shoukuan(fromAddress, amount, null);
+    }
+
     /**
      * 收款 DID-DID
      */
-    public static void testSHoukuan() {
-        String fromAddress = "EYegRY3DQPUrD8igKzCaH19ZZAYN3DTeNF";
-        String toAddress = "EMXabt61cDgaCXuFvx4NSvKt2t33JJqTxT";
+    public static void Shoukuan(String fromAddress, long amount, TransCallback callback) {
+        String toAddress = Utilty.getPreference(Constants.SP_KEY_DID_PUBLICKEY, "");
 
-
-//        ArrayList<String> arrayList = new ArrayList<>();
-//        arrayList.add("EU3e23CtozdSvrtPzk9A1FeC9iGD896DdV");
-//        JsonObject param = new JsonObject();
-//        param.addProperty("inputs", arrayList.add(""));
-//        param.addProperty("outputs", "[{\"addr\": \"EPzxJrHefvE7TCWmEGQ4rcFgxGeGBZFSHw\",\"amt\": 1000}]");
-//        LogUtil.d("param:" + param.toString());
-        String param = " {\"inputs\":[\"EMXabt61cDgaCXuFvx4NSvKt2t33JJqTxT\"],\"outputs\":[{\"addr\":\"EYegRY3DQPUrD8igKzCaH19ZZAYN3DTeNF\", \"amt\" :1000}]}";
+        String param = String.format("{\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\", \"amt\":%d}]}", fromAddress, toAddress, amount);
         HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_CTX, param, new HttpRequest.HttpCallbackListener() {
             @Override
             public void onFinish(final String response) {
                 LogUtil.d("response:" + response);
-                ((Activity) mContext).runOnUiThread(new Runnable() {
+                String signed = parseShoukuanData(response);//testCosignTxData();
+                LogUtil.d("signed data=" + signed);
+                String signdparam = String.format("{\"data\":\"%s\"}", signed);
+                LogUtil.d("signdparam data=" + signdparam);
+                HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
                     @Override
-                    public void run() {
-                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                        String signed = "";//testCosignTxData();
-                        LogUtil.d("signed data=" + signed);
-                        String signdparam = String.format("{\"data\":\"%s\"}", signed);
-                        LogUtil.d("signdparam data=" + signdparam);
-                        HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
-                            @Override
-                            public void onFinish(final String response) {
-                                ((Activity)mContext).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LogUtil.d("shoukuan result:" + response);
-                                        Toast.makeText(mContext, response, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
+                    public void onFinish(final String response) {
+                        LogUtil.d("shoukuan result:" + response);
+                    }
 
-                            @Override
-                            public void onError(Exception e) {
+                    @Override
+                    public void onError(Exception e) {
 
-                            }
-                        });
                     }
                 });
             }
@@ -424,13 +441,11 @@ public class DidLibrary {
         data.buf = origin.getBytes();
         ElastosWallet.Data signedData = new ElastosWallet.Data();
         int signedLen = ElastosWallet.sign(mPrivateKey, data, data.buf.length, signedData);
-//        int signedLen = ElastosWalletSign.generateRawTransaction(origin);
         if (signedLen <= 0) {
             String errmsg = "Failed to sign data.\n";
             LogUtil.e(errmsg);
         }
-        testSignTxData();
-        return Utilty.bytesToHexString(signedData.buf);
+        return new String(signedData.buf);
     }
 
     private static String testSignTxData() {
@@ -458,15 +473,74 @@ public class DidLibrary {
         return signedData;
     }
 
-    private static String parseChongzhiData(String data) {
+    private static String parseChongzhiData(String data, String mnemonic) {
         String returnData = "";
-        try {
-            JSONObject js = new JSONObject(data);
-//            String result
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        CctBean cctBean = new Gson().fromJson(data, CctBean.class);
+        if (cctBean.getStatus() != 200) return null;
+        String privateKey = getPrivateKeyFromMnemonic(mnemonic);
+        if (TextUtils.isEmpty(privateKey)) return null;
+        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey(privateKey);
+//        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey("840d6c631e3d612aa624dae2d7f6d354e58135a7a6cb16ed6dd264b7d104aae7");
+        String trans = new Gson().toJson(cctBean.getResult());
+        LogUtil.d("chongzhi:trans data=" + trans);
+        returnData = ElastosWalletSign.generateRawTransaction(trans);
         return returnData;
+    }
+
+    private static String parseTixianData(String data) {
+        String returnData = "";
+        CctBean cctBean = new Gson().fromJson(data, CctBean.class);
+        if (cctBean.getStatus() != 200) return null;
+        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey(mPrivateKey);
+        String trans = new Gson().toJson(cctBean.getResult());
+        LogUtil.d("chongzhi:trans data=" + trans);
+        returnData = ElastosWalletSign.generateRawTransaction(trans);
+        return returnData;
+    }
+
+    private static String parseZhuanzhangData(String data) {
+        String returnData = "";
+        CctBean cctBean = new Gson().fromJson(data, CctBean.class);
+        if (cctBean.getStatus() != 200) return null;
+        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey(mPrivateKey);
+        String trans = new Gson().toJson(cctBean.getResult());
+        LogUtil.d("chongzhi:trans data=" + trans);
+        returnData = ElastosWalletSign.generateRawTransaction(trans);
+        return returnData;
+    }
+
+    private static String parseShoukuanData(String data) {
+        String returnData = "";
+        CctBean cctBean = new Gson().fromJson(data, CctBean.class);
+        if (cctBean.getStatus() != 200) return null;
+        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey(mPrivateKey);
+        String trans = new Gson().toJson(cctBean.getResult());
+        LogUtil.d("chongzhi:trans data=" + trans);
+        returnData = ElastosWalletSign.generateRawTransaction(trans);
+        return returnData;
+    }
+
+    private static String getPrivateKeyFromMnemonic(String mnemonic) {
+        String language;
+        String words;
+        if (Utilty.isChinese(mnemonic)) {
+            language = "chinese";
+            words = FileUtil.readAssetsTxt(mContext, "ElastosWalletLib/mnemonic_chinese.txt");
+        } else {
+            language = "english";
+            words = "";
+        }
+
+        mSeed = new ElastosWallet.Data();
+        int ret = ElastosWallet.getSeedFromMnemonic(mSeed, mnemonic, language, words, "");
+        if (ret <= 0) {
+            String errmsg = "Failed to get seed from mnemonic. ret=" + ret + "\n";
+            LogUtil.e(errmsg);
+            return null;
+        }
+        mSeedLen = ret;
+
+        return ElastosWallet.getSinglePrivateKey(mSeed, mSeedLen);
     }
 
 
@@ -581,6 +655,87 @@ public class DidLibrary {
         if (TextUtils.isEmpty(address)) return null;
         Utilty.setPreference(Constants.SP_KEY_DID_ADDRESS, address);
         return address;
+    }
+
+
+    public static void setDidInfo(final String memo, final TransCallback callback) {
+        String fromAddress = Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, "");
+
+        String param = String.format("{\"inputs\":[\"%s\"],\"outputs\":[{\"addr\":\"%s\", \"amt\":%d}]}", fromAddress, fromAddress, 0);
+        HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_CTX, param, new HttpRequest.HttpCallbackListener() {
+            @Override
+            public void onFinish(final String response) {
+                LogUtil.d("response:" + response);
+                HttpBean ctxBean = new Gson().fromJson(response, HttpBean.class);
+                if (ctxBean.getStatus() != 200 && callback != null) {
+                    callback.onFailed(response);
+                    return;
+                }
+                String signed = parseDidData(response, memo);
+                if (TextUtils.isEmpty(signed)) {
+                    if (callback != null) {
+                        callback.onFailed("{\"status\":\"500\",\"result\":\"internal error\"}");
+                    }
+                    return;
+                }
+                LogUtil.d("signed data=" + signed);
+                String signdparam = String.format("{\"data\":\"%s\"}", signed);
+                LogUtil.d("signdparam data=" + signdparam);
+                HttpRequest.sendRequestWithHttpURLConnection(Urls.SERVER_DID + Urls.DID_SRT, signdparam, new HttpRequest.HttpCallbackListener() {
+                    @Override
+                    public void onFinish(final String response) {
+                        LogUtil.d("setdid result:" + response);
+                        if (callback != null) {
+                            callback.onSuccess(response);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        if (callback != null) {
+                            callback.onFailed(e.getMessage());
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if (callback != null) {
+                    callback.onFailed(e.getMessage());
+                }
+            }
+        });
+
+
+
+    }
+
+    private static String parseDidData(String data, String memo) {
+        String returnData = "";
+        CctBean cctBean = new Gson().fromJson(data, CctBean.class);
+        if (cctBean.getStatus() != 200) return null;
+        cctBean.getResult().getTransactions().get(0).getUTXOInputs().get(0).setPrivateKey(mPrivateKey);
+
+        String hexMemo = Utilty.str2HexStr(memo);
+        String publicKey = Utilty.getPreference(Constants.SP_KEY_DID_PUBLICKEY, "");
+        String signedMemo = getSignedData(memo);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("msg", hexMemo);
+        jsonObject.addProperty("pub", publicKey);
+        jsonObject.addProperty("sig", signedMemo);
+
+        cctBean.getResult().getTransactions().get(0).setMemo(jsonObject.toString());
+
+        String trans = new Gson().toJson(cctBean.getResult());
+        LogUtil.d("setdid:trans data=" + trans);
+        returnData = ElastosWalletSign.generateRawTransaction(trans);
+        return returnData;
+    }
+
+    public static void getDidInfo() {
+
     }
 
 }

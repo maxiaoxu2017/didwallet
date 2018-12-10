@@ -10,6 +10,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.ela.wallet.sdk.didlibrary.utils.DidEntry;
 import com.ela.wallet.sdk.didlibrary.utils.DidLibrary;
 import com.ela.wallet.sdk.didlibrary.utils.LogUtil;
 
@@ -36,10 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_game = findViewById(R.id.btn_game);
         btn_game.setOnClickListener(this);
 
-        DidLibrary.openLog(true);
-        String message = DidLibrary.init(this);
-        LogUtil.d(message);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        //set true to print logs when debug;set false when release.
+        DidEntry.openLog(true);
+        //init the sdk library
+        DidEntry.init(this);
     }
 
     @Override
@@ -47,19 +48,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int id = view.getId();
         switch (id) {
             case R.id.btn_back:
-//                if (webView.canGoBack()) {
-//                    webView.goBack();
-//                }
-                Intent intent = new Intent();
-                intent.setClass(this, DemoActivity.class);
-                startActivity(intent);
+                if (webView.canGoBack()) {
+                    webView.goBack();
+                }
                 break;
             case R.id.btn_game:
-//                webView.loadUrl("file:///android_asset/Jsonp.html");
-                webView.loadUrl("file:///android_asset/demo.html");
+                //example html
+                webView.loadUrl("file:///android_asset/apidemo.html");
                 break;
             case R.id.button:
-                DidLibrary.launch(MainActivity.this);
+                //internal UI in the library
+                DidEntry.launch(MainActivity.this);
                 break;
         }
     }

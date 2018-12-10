@@ -31,9 +31,9 @@ import java.util.Locale;
 public class PersonalActivity extends BaseActivity {
 
     private TextView tv_balance;
-    private RelativeLayout rl_language;
-    private TextView tv_language_tips;
-    private RelativeLayout rl_importwallet;
+//    private RelativeLayout rl_language;
+//    private TextView tv_language_tips;
+//    private RelativeLayout rl_importwallet;
 
     private RecyclerView rv_personal;
     private PersonalRecyclerViewAdapter mAdapter;
@@ -49,26 +49,26 @@ public class PersonalActivity extends BaseActivity {
     protected void initView() {
         rv_personal = findViewById(R.id.rv_personal);
         tv_balance = findViewById(R.id.tv_personal_did_balance);
-        rl_language = findViewById(R.id.rl_personal_language);
-        rl_importwallet = findViewById(R.id.rl_personal_wallet);
-        tv_language_tips = findViewById(R.id.tv_personal_settings_language_tips);
-
-        rl_language.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(PersonalActivity.this, LanguageActivity.class);
-                startActivity(intent);
-            }
-        });
-        rl_importwallet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(PersonalActivity.this, ImportWalletActivity.class);
-                startActivity(intent);
-            }
-        });
+//        rl_language = findViewById(R.id.rl_personal_language);
+//        rl_importwallet = findViewById(R.id.rl_personal_wallet);
+//        tv_language_tips = findViewById(R.id.tv_personal_settings_language_tips);
+//
+//        rl_language.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent();
+//                intent.setClass(PersonalActivity.this, LanguageActivity.class);
+//                startActivity(intent);
+//            }
+//        });
+//        rl_importwallet.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent intent = new Intent();
+//                intent.setClass(PersonalActivity.this, ImportWalletActivity.class);
+//                startActivity(intent);
+//            }
+//        });
     }
 
     @Override
@@ -78,7 +78,7 @@ public class PersonalActivity extends BaseActivity {
         mList.add(new SettingModel(getString(R.string.nav_pay)));
         mList.add(new SettingModel(getString(R.string.me_recharge)));
         mList.add(new SettingModel(getString(R.string.me_withdraw)));
-        mList.add(new SettingModel(getString(R.string.me_records)));
+//        mList.add(new SettingModel(getString(R.string.me_records)));
         mAdapter = new PersonalRecyclerViewAdapter(this, mList);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv_personal.setLayoutManager(llm);
@@ -112,20 +112,20 @@ public class PersonalActivity extends BaseActivity {
     }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String language = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
-        if (TextUtils.isEmpty(language)) {
-            if (Locale.getDefault().getLanguage().contains("zh")) {
-                tv_language_tips.setText("中文（简体）");
-            } else {
-                tv_language_tips.setText("ENGLISH");
-            }
-        } else {
-            tv_language_tips.setText(language.equals("english") ? "ENGLISH" : "中文（简体）");
-        }
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        String language = Utilty.getPreference(Constants.SP_KEY_APP_LANGUAGE, "");
+//        if (TextUtils.isEmpty(language)) {
+//            if (Locale.getDefault().getLanguage().contains("zh")) {
+//                tv_language_tips.setText("中文（简体）");
+//            } else {
+//                tv_language_tips.setText("ENGLISH");
+//            }
+//        } else {
+//            tv_language_tips.setText(language.equals("english") ? "ENGLISH" : "中文（简体）");
+//        }
+//    }
 
     private void loadBalanceData() {
         String url = String.format("%s%s%s", Urls.SERVER_DID, Urls.DID_BALANCE, Utilty.getPreference(Constants.SP_KEY_DID_ADDRESS, ""));
